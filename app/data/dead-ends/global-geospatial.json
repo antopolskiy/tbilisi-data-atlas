@@ -1,0 +1,72 @@
+[
+  {
+    "name": "OpenSky live aircraft states over Georgia",
+    "status": "Temporarily unavailable and operationally license-restricted",
+    "reason": "The documented bbox endpoint was requested anonymously three times, including with an identifying User-Agent, and returned HTTP 503 each time. Current OpenSky terms limit ordinary authorization to non-profit research/education and require a written license for any operational REST API use, even by a non-profit; commercial entities also require written permission.",
+    "testedAt": "2026-07-22 13:59–14:01 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://opensky-network.org/api/states/all?lamin=40.8&lomin=39.5&lamax=43.6&lomax=46.8",
+      "https://openskynetwork.github.io/opensky-api/rest.html",
+      "https://opensky-network.org/about/terms-of-use"
+    ],
+    "boundary": "Do not catalog OpenSky as a currently validated live Georgia feed or use it operationally without a written license. Retry only for research validation after service recovery; aircraft identifiers can also raise privacy/security concerns."
+  },
+  {
+    "name": "Mapillary Tbilisi imagery API",
+    "status": "Credential-gated; local structured query not validated",
+    "reason": "Mapillary's Graph API and official demo require an access token before bbox image metadata or detections can be queried. No user-provided token was available, so public-map appearance was not converted into an asserted machine-readable local inventory.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://mapillary.github.io/api-demo/",
+      "https://help.mapillary.com/hc/en-us/articles/360010234680-Accessing-imagery-and-data-through-the-Mapillary-API",
+      "https://graph.mapillary.com/images"
+    ],
+    "boundary": "A future catalog record requires an authorized token, a live Tbilisi bbox response, exact returned fields, quota details and current Mapillary image/data reuse terms. Do not expose a client token in the report."
+  },
+  {
+    "name": "KartaView / OpenStreetCam street-level imagery in Georgia",
+    "status": "No local records found",
+    "reason": "Both the current v2 nearby-photo query and legacy unauthenticated nearby-photo endpoint returned empty results. Additional 20 km searches around central Tbilisi, Batumi and Kutaisi also returned zero photos.",
+    "testedAt": "2026-07-22 14:00 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://api.openstreetcam.org/2.0/photo/?lat=41.7151&lng=44.8271&zoomLevel=16&join=sequence&orderBy=distance&orderDirection=asc",
+      "https://api.openstreetcam.org/1.0/list/nearby-photos/",
+      "https://kartaview.org/doc/photos"
+    ],
+    "boundary": "The API is machine-readable, but it did not genuinely contain validated Tbilisi/Georgia imagery in this pass. Recheck coverage later; do not use documentation examples from other countries as local evidence."
+  },
+  {
+    "name": "GDACS disaster-alert filtering for Georgia",
+    "status": "Global API verified; Georgia-local record not validated",
+    "reason": "The GeoJSON event-list endpoint returned 203 current worldwide records and a full schema, but the attempted country-filtered searches returned either no content or broad substring matches unrelated to Georgia. No current Georgia event was present in the returned global feature set.",
+    "testedAt": "2026-07-22 13:58–14:02 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventlist=EQ;FL;TC;VO;DR;WF",
+      "https://www.gdacs.org/gdacsapi/api/Events/geteventlist/search",
+      "https://www.gdacs.org/gdacsapi/swagger/index.html"
+    ],
+    "boundary": "Keep GDACS as a monitored global avenue, not a local catalog page, until a reproducible Georgia event or geometry query is validated. USGS and FIRMS already provide locally evidenced earthquake and fire records."
+  },
+  {
+    "name": "Open-Meteo CAMS air-quality forecast",
+    "status": "Validated but omitted as overlapping",
+    "reason": "A Tbilisi query returned current and hourly PM10, PM2.5, CO, NO2, SO2, ozone, aerosol optical depth, dust, UV index and European AQI. The local civic/environment batch already contains official Georgian station observations, which are preferable for measured local conditions; the Open-Meteo response is modeled CAMS forecast data.",
+    "testedAt": "2026-07-22 13:45 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=41.7151&longitude=44.8271&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,aerosol_optical_depth,dust,uv_index,european_aqi&hourly=pm10,pm2_5,nitrogen_dioxide,ozone,dust,european_aqi&timezone=Asia/Tbilisi&forecast_days=3",
+      "https://open-meteo.com/en/docs/air-quality-api"
+    ],
+    "boundary": "Treat as a forecast/model complement only and label it CAMS-derived. Do not merge modeled values with official station readings without source and spatial-resolution labels. Omitted from the ten-source import set to avoid duplication."
+  },
+  {
+    "name": "NASA POWER daily agroclimate point API",
+    "status": "Validated but omitted as overlapping",
+    "reason": "The Tbilisi point API returned daily temperature, corrected precipitation, humidity, wind, solar irradiance and evapotranspiration-energy values, plus units and source metadata. Recent days contained the documented -999 fill value. Its broad weather/agroclimate role overlaps the included Open-Meteo history record and was outside the prioritized ten-source set.",
+    "testedAt": "2026-07-22 14:05 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M,WS10M,ALLSKY_SFC_SW_DWN,EVPTRNS&community=AG&longitude=44.8271&latitude=41.7151&start=20260715&end=20260721&format=JSON",
+      "https://power.larc.nasa.gov/docs/services/api/"
+    ],
+    "boundary": "Credible secondary source worth a later page if solar/agriculture coverage is desired. Preserve -999 as missing, not a measurement, and do not conflate gridded POWER values with station observations."
+  }
+]

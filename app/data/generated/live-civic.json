@@ -1,0 +1,1064 @@
+[
+  {
+    "slug": "telasi-power-outages",
+    "name": "Telasi planned and unplanned electricity interruptions",
+    "shortName": "Telasi outages",
+    "category": "Utilities",
+    "subcategory": "Electricity outages",
+    "executiveSummary": "Official address-level operational records for current planned and unplanned electricity interruptions in Tbilisi, including affected-user counts, start and estimated restoration times, and Georgian address text.",
+    "provider": "JSC Telasi",
+    "sourceKind": "Official public-page backend",
+    "geography": "Telasi electricity distribution area in Tbilisi",
+    "freshness": "Live",
+    "updateCadence": "Event-driven; tested record was created 10 minutes after its outage start",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22T13:37:00+04:00 / 2026-07-22T09:37:00Z",
+    "accessSummary": "Unauthenticated GET returning JSON. Undocumented website backend; selectedlan=en still returned Georgian bodies.",
+    "license": "Unclear; no explicit data reuse license or API terms found",
+    "recordCount": "6 current operational records and 886 archive records reported at test time",
+    "keyEntities": ["Current interruption", "Published outage notice"],
+    "accessPoints": [
+      {"label":"Public page","url":"https://www.telasi.ge/en/company-news/power-outage","method":"GET","format":"HTML","authentication":"None observed"},
+      {"label":"Current and archive JSON","url":"https://app.telasi.ge/api/view/telasi/getPoweroutages?contentType=poweroutage&pageNumber=1&perPage=50&selectedlan=en","method":"GET","format":"JSON","authentication":"None observed","notes":"Parameters: contentType, pageNumber, perPage, selectedlan. No published rate limit."}
+    ],
+    "schemas": [
+      {
+        "name": "Response wrapper",
+        "description": "Current operational records under api and historical CMS notices under content.",
+        "fields": [
+          {"field":"api.listCount","type":"integer","nullable":"No","example":"6","meaning":"Current result count","freshness":"live"},
+          {"field":"api.page","type":"integer","nullable":"No","example":"1","meaning":"Current-results page","freshness":"reference"},
+          {"field":"api.list","type":"array<object>","nullable":"No","example":"[...]","meaning":"Current interruptions","freshness":"live"},
+          {"field":"content.listCount","type":"integer","nullable":"No","example":"886","meaning":"Published notice count","freshness":"historical"},
+          {"field":"content.page","type":"string","nullable":"No","example":"1","meaning":"Archive page","freshness":"reference","notes":"Unlike api.page, observed as a string"},
+          {"field":"content.list","type":"array<object>","nullable":"No","example":"[...]","meaning":"Published notice archive","freshness":"historical"}
+        ]
+      },
+      {
+        "name": "Current interruption",
+        "description": "api.list[*] operational event.",
+        "fields": [
+          {"field":"metas","type":"null | object","nullable":"Yes","example":"null","meaning":"Optional CMS metadata","freshness":"unknown"},
+          {"field":"taxonomy.poweroutage_address","type":"array<integer>","nullable":"No","example":"[1289,1524,1526,3826]","meaning":"Internal address taxonomy IDs","freshness":"reference"},
+          {"field":"taxonomy.power_outage","type":"array<integer>","nullable":"No","example":"[50]","meaning":"Outage-type taxonomy IDs","freshness":"reference","notes":"Observed 50 unplanned and 31 planned"},
+          {"field":"id","type":"integer","nullable":"No","example":"26723","meaning":"Operational record ID","freshness":"reference"},
+          {"field":"title","type":"string (HTML)","nullable":"No","example":"<p>არაგეგმური წყვეტა</p>","meaning":"Display outage type","freshness":"live"},
+          {"field":"slug","type":"string","nullable":"No","example":"gatishva-gis95131","meaning":"CMS-friendly event slug","freshness":"reference"},
+          {"field":"teaser","type":"string","nullable":"Unknown","example":"ირაკლი აბაშიძის ქ.,...","meaning":"Short affected-address preview","freshness":"live"},
+          {"field":"description","type":"string | null","nullable":"Yes","example":"null","meaning":"Optional description","freshness":"live"},
+          {"field":"code","type":"string","nullable":"No","example":"GIS95131","meaning":"Telasi event/work code","freshness":"reference"},
+          {"field":"users_count","type":"integer","nullable":"No","example":"556","meaning":"Affected users/customers","freshness":"live","notes":"Not population"},
+          {"field":"outage_time","type":"datetime string","nullable":"No","example":"2026-07-22 12:58:00","meaning":"Interruption start","freshness":"live","notes":"Offset absent; appears local"},
+          {"field":"poweron_time","type":"datetime string","nullable":"Unknown","example":"2026-07-22 14:58:00","meaning":"Estimated restoration","freshness":"live","notes":"Estimate, not confirmed outcome"},
+          {"field":"delayed","type":"string","nullable":"No","example":"არა","meaning":"Delay/postponement state","freshness":"live","notes":"Georgian text; observed არა and არ გადადებულა"},
+          {"field":"status","type":"string","nullable":"No","example":"hidden","meaning":"CMS publication state","freshness":"reference"},
+          {"field":"user_id","type":"integer","nullable":"No","example":"0","meaning":"Internal CMS user ID","freshness":"reference"},
+          {"field":"count","type":"integer","nullable":"No","example":"1","meaning":"Undocumented internal/result count","freshness":"unknown"},
+          {"field":"created_at","type":"datetime string","nullable":"No","example":"2026-07-22 13:08:00","meaning":"Record creation time","freshness":"live"},
+          {"field":"updated_at","type":"datetime string","nullable":"No","example":"2026-07-22 13:08:00","meaning":"Last source update","freshness":"live"},
+          {"field":"relatedSitemap","type":"null | object","nullable":"Yes","example":"null","meaning":"Optional CMS route relation","freshness":"reference"},
+          {"field":"localisedto","type":"string","nullable":"No","example":"ka","meaning":"Actual content locale","freshness":"reference"},
+          {"field":"full_title","type":"string","nullable":"No","example":"არაგეგმური წყვეტა","meaning":"Plain outage-type label","freshness":"live"},
+          {"field":"editor","type":"string (HTML/plain text)","nullable":"No","example":"ირაკლი აბაშიძის ქ.,მცხეთის I შეს. I ჩიხი,...","meaning":"Full affected-address text","freshness":"live"}
+        ]
+      },
+      {
+        "name": "Published notice",
+        "description": "content.list[*] CMS archive record.",
+        "fields": [
+          {"field":"taxonomy.content_poweroutage","type":"array<integer>","nullable":"No","example":"[2769]","meaning":"Internal notice taxonomy IDs","freshness":"reference"},
+          {"field":"relatedSitemap","type":"null | object","nullable":"Yes","example":"null","meaning":"Optional route relation","freshness":"reference"},
+          {"field":"id","type":"integer","nullable":"No","example":"5621","meaning":"Notice ID","freshness":"reference"},
+          {"field":"user_id","type":"integer","nullable":"No","example":"402","meaning":"Internal author/editor ID","freshness":"reference"},
+          {"field":"pid","type":"integer","nullable":"No","example":"0","meaning":"Parent CMS record ID","freshness":"reference"},
+          {"field":"sort","type":"integer","nullable":"No","example":"0","meaning":"CMS ordering value","freshness":"reference"},
+          {"field":"created_at","type":"datetime string","nullable":"No","example":"varies","meaning":"Notice creation","freshness":"historical"},
+          {"field":"updated_at","type":"datetime string","nullable":"No","example":"varies","meaning":"Notice update","freshness":"historical"},
+          {"field":"date","type":"date/datetime string","nullable":"Unknown","example":"varies","meaning":"Display date","freshness":"historical"},
+          {"field":"status","type":"string","nullable":"No","example":"published","meaning":"Publication state","freshness":"reference"},
+          {"field":"content_type","type":"string","nullable":"No","example":"poweroutage","meaning":"CMS content type","freshness":"reference"},
+          {"field":"slug","type":"string","nullable":"No","example":"varies","meaning":"Notice route slug","freshness":"reference"},
+          {"field":"alert","type":"datetime string","nullable":"No","example":"0000-00-00 00:00:00","meaning":"CMS alert scheduling field","freshness":"historical","notes":"Zero date means unset"},
+          {"field":"singlePageRoute","type":"string","nullable":"No","example":"","meaning":"Optional custom route","freshness":"reference"},
+          {"field":"mail_sent","type":"string","nullable":"Yes","example":"Yes","meaning":"Whether CMS mail was sent","freshness":"historical"},
+          {"field":"title","type":"string (possibly HTML)","nullable":"No","example":"varies","meaning":"Notice headline","freshness":"historical"},
+          {"field":"teaser","type":"string (possibly HTML)","nullable":"Unknown","example":"varies","meaning":"Notice summary","freshness":"historical"},
+          {"field":"editor","type":"string (HTML)","nullable":"No","example":"long HTML","meaning":"Full published notice","freshness":"historical"},
+          {"field":"localisedto","type":"string","nullable":"No","example":"ka","meaning":"Notice language","freshness":"reference"}
+        ]
+      }
+    ],
+    "samples": [{"label":"Current unplanned interruption","retrievedAt":"2026-07-22T13:37:00+04:00","format":"JSON","value":"{\"id\":26723,\"code\":\"GIS95131\",\"full_title\":\"არაგეგმური წყვეტა\",\"users_count\":556,\"outage_time\":\"2026-07-22 12:58:00\",\"poweron_time\":\"2026-07-22 14:58:00\",\"created_at\":\"2026-07-22 13:08:00\",\"localisedto\":\"ka\"}"}],
+    "caveats": ["Undocumented endpoint and no version guarantee", "English selection still returned Georgian address/body content", "poweron_time is an estimate", "Current and archive sections have different schemas"],
+    "reliability": ["Returned HTTP 200 JSON in the research session", "Source timestamps support ingestion-lag checks", "Last-known raw response can be cached but ages quickly"],
+    "citations": [{"label":"Telasi outage page","url":"https://www.telasi.ge/en/company-news/power-outage","type":"Primary"},{"label":"Telasi outage JSON","url":"https://app.telasi.ge/api/view/telasi/getPoweroutages?contentType=poweroutage&pageNumber=1&perPage=50&selectedlan=en","type":"Primary"}],
+    "snapshotPath":".agents/data-snapshots/telasi-power-outages-2026-07-22-sample.json",
+    "featured":true
+  },
+  {
+    "slug": "gse-live-power-system",
+    "name": "Georgian State Electrosystem live power balance and cross-border flows",
+    "shortName": "GSE live grid",
+    "category": "Utilities",
+    "subcategory": "Electricity system operations",
+    "executiveSummary": "Official live national grid frequency, consumption, generation by technology, aggregate import/export, and signed cross-border power-flow values. The public dashboard polls its JSON backends every 60 seconds.",
+    "provider": "JSC Georgian State Electrosystem",
+    "sourceKind": "Official public-page backend",
+    "geography": "Georgia-wide power system and international interconnections; not neighborhood outages",
+    "freshness": "Live",
+    "updateCadence": "Public page JavaScript polls every 60 seconds; its old-data threshold is 3 minutes",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22T13:44:48+04:00 / 2026-07-22T09:44:48Z",
+    "accessSummary": "Two unauthenticated JSON GET endpoints used by the official homepage dashboard.",
+    "license": "Unclear; no explicit data reuse license or API terms found",
+    "recordCount": "One current frequency value, one national balance object, and seven interconnection values per response",
+    "keyEntities": ["Grid frequency", "National electricity balance", "Cross-border flow"],
+    "accessPoints": [
+      {"label":"Official live dashboard","url":"https://www.gse.com.ge/home","method":"GET","format":"HTML","authentication":"None observed"},
+      {"label":"Frequency JSON","url":"https://www.gse.com.ge/apps/gsebackend/rest/widget","method":"GET","format":"JSON","authentication":"None observed"},
+      {"label":"Balance and flow JSON","url":"https://www.gse.com.ge/apps/gsebackend/rest/map","method":"GET","format":"JSON","authentication":"None observed","notes":"No published rate limit; page itself polls once per minute"}
+    ],
+    "schemas": [
+      {"name":"Grid frequency","description":"widget response; frequency unit confirmed by official dashboard.","fields":[
+        {"field":"widget","type":"number","nullable":"No","example":"50.02","meaning":"Current grid frequency in hertz","freshness":"live"}
+      ]},
+      {"name":"National balance","description":"typeSum fields; all power values displayed as MW.","fields":[
+        {"field":"typeSum.timestamp","type":"null | string","nullable":"Yes","example":"null","meaning":"Intended source measurement timestamp","freshness":"live","notes":"Null during validation; always keep retrieval time"},
+        {"field":"typeSum.hydroData","type":"number","nullable":"No","example":"2053.342773","meaning":"Hydroelectric generation, MW","freshness":"live"},
+        {"field":"typeSum.thermalData","type":"number","nullable":"No","example":"0","meaning":"Thermal generation, MW","freshness":"live"},
+        {"field":"typeSum.windPowerData","type":"number","nullable":"No","example":"2","meaning":"Wind generation, MW","freshness":"live"},
+        {"field":"typeSum.solarData","type":"number","nullable":"No","example":"0","meaning":"Solar generation, MW","freshness":"live","notes":"Returned by API but omitted from homepage summary table"},
+        {"field":"typeSum.importData","type":"number","nullable":"No","example":"11","meaning":"Aggregate import, MW","freshness":"derived"},
+        {"field":"typeSum.exportData","type":"number","nullable":"No","example":"86.817204","meaning":"Aggregate export, MW","freshness":"derived"},
+        {"field":"typeSum.totalConsumption","type":"number","nullable":"No","example":"1980.14502","meaning":"Total national consumption, MW","freshness":"derived"},
+        {"field":"typeSum.totalGeneration","type":"number","nullable":"No","example":"2055.342773","meaning":"Total national generation, MW","freshness":"derived"}
+      ]},
+      {"name":"Cross-border flows","description":"areaSum signed MW values. Official map uses sign to change arrow direction and displays absolute magnitude.","fields":[
+        {"field":"areaSum.russiaSum","type":"number","nullable":"No","example":"0","meaning":"Aggregate/other Russia interconnection flow, MW","freshness":"live"},
+        {"field":"areaSum.russiaSalkhinoSum","type":"number","nullable":"No","example":"0","meaning":"Russia flow via Salkhino-labelled interconnection, MW","freshness":"live"},
+        {"field":"areaSum.russiaJavaSum","type":"number","nullable":"No","example":"11","meaning":"Russia flow via Java-labelled interconnection, MW","freshness":"live"},
+        {"field":"areaSum.russiaNakaduliSum","type":"number","nullable":"No","example":"0","meaning":"Russia flow via Nakaduli-labelled interconnection, MW","freshness":"live"},
+        {"field":"areaSum.azerbaijanSum","type":"number","nullable":"No","example":"-11.231602","meaning":"Azerbaijan interconnection flow, signed MW","freshness":"live"},
+        {"field":"areaSum.armeniaSum","type":"number","nullable":"No","example":"0","meaning":"Armenia interconnection flow, signed MW","freshness":"live"},
+        {"field":"areaSum.turkeySum","type":"number","nullable":"No","example":"-75.585602","meaning":"Turkey interconnection flow, signed MW","freshness":"live"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Frequency","retrievedAt":"2026-07-22T13:44:48+04:00","format":"JSON","value":"{\"widget\":50.02}"},
+      {"label":"Balance and flows","retrievedAt":"2026-07-22T13:44:48+04:00","format":"JSON","value":"{\"typeSum\":{\"timestamp\":null,\"hydroData\":2053.342773,\"thermalData\":0,\"windPowerData\":2,\"solarData\":0,\"importData\":11,\"exportData\":86.817204,\"totalConsumption\":1980.14502,\"totalGeneration\":2055.342773},\"areaSum\":{\"russiaSum\":0,\"russiaSalkhinoSum\":0,\"russiaJavaSum\":11,\"russiaNakaduliSum\":0,\"azerbaijanSum\":-11.231602,\"armeniaSum\":0,\"turkeySum\":-75.585602}}"}
+    ],
+    "caveats": ["National system data, not household or district outages", "typeSum.timestamp was null", "Sign convention should be interpreted through the official map orientation", "Undocumented endpoint"],
+    "reliability": ["Both endpoints returned HTTP 200 application/json", "Values changed between requests", "Client polling cadence and 3-minute stale threshold were verified in shipped JavaScript"],
+    "citations": [{"label":"GSE homepage dashboard","url":"https://www.gse.com.ge/home","type":"Primary"},{"label":"Frequency JSON","url":"https://www.gse.com.ge/apps/gsebackend/rest/widget","type":"Primary"},{"label":"Balance JSON","url":"https://www.gse.com.ge/apps/gsebackend/rest/map","type":"Primary"}],
+    "featured":true
+  },
+  {
+    "slug": "air-gov-ge-hourly",
+    "name": "Official hourly Tbilisi air-quality station observations",
+    "shortName": "Air quality hourly",
+    "category": "Environment",
+    "subcategory": "Air quality",
+    "executiveSummary": "Detailed official station JSON combining station identity and coordinates, pollutant definitions and units, AQI threshold bands, chart metadata, and hourly pollutant values with measurement times for five Tbilisi stations.",
+    "provider": "Air.gov.ge official environmental monitoring portal",
+    "sourceKind": "Official public-page backend",
+    "geography": "National monitoring network; municipality_id=51 returned five Tbilisi stations",
+    "freshness": "Near real-time",
+    "updateCadence": "Hourly observations; provisional until verification",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22T13:37:00+04:00 / 2026-07-22T09:37:00Z",
+    "accessSummary": "Unauthenticated parameterized JSON GET; trailing slash redirects/should be retained.",
+    "license": "Unclear; no explicit machine-readable data license found",
+    "recordCount": "5 Tbilisi station objects in tested response",
+    "keyEntities": ["Station", "Station equipment/pollutant", "AQI band configuration", "Hourly measurement"],
+    "accessPoints": [
+      {"label":"Air-quality portal","url":"https://air.gov.ge/en/","method":"GET","format":"HTML","authentication":"None observed"},
+      {"label":"Hourly station JSON","url":"https://air.gov.ge/api/get_data_1hour/?from_date_time=2026-07-22T11:00:00&to_date_time=2026-07-22T13:00:00&station_code=all&municipality_id=51&substance=all&last_data=true&chart=false&format=json","method":"GET","format":"JSON","authentication":"None observed","notes":"Select time range, station, municipality, substance, latest-only, chart, and format"}
+    ],
+    "schemas": [
+      {"name":"Station","description":"Top-level array item.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"6","meaning":"Internal station ID","freshness":"reference"},
+        {"field":"municipality_id","type":"integer","nullable":"No","example":"51","meaning":"Municipality ID","freshness":"reference"},
+        {"field":"code","type":"string","nullable":"No","example":"TSRT","meaning":"Station code","freshness":"reference"},
+        {"field":"settlement","type":"string","nullable":"No","example":"Georgian text","meaning":"Settlement name in Georgian","freshness":"reference"},
+        {"field":"settlement_en","type":"string","nullable":"Yes","example":"","meaning":"Settlement name in English","freshness":"reference"},
+        {"field":"address","type":"string","nullable":"Yes","example":"№105","meaning":"Default-locale address component","freshness":"reference"},
+        {"field":"address_en","type":"string","nullable":"Yes","example":"varies","meaning":"English address component","freshness":"reference"},
+        {"field":"lat","type":"number","nullable":"No","example":"41.7419","meaning":"Station latitude","freshness":"reference"},
+        {"field":"long","type":"number","nullable":"No","example":"44.77931","meaning":"Station longitude","freshness":"reference"},
+        {"field":"elev","type":"number","nullable":"Unknown","example":"412","meaning":"Station elevation","freshness":"reference","notes":"Unit absent in field"},
+        {"field":"stationequipment_set","type":"array<object>","nullable":"No","example":"[...]","meaning":"Equipment/pollutants and readings","freshness":"live"},
+        {"field":"equipment_count","type":"integer","nullable":"No","example":"13","meaning":"Equipment-entry count","freshness":"derived"},
+        {"field":"stationimage_set","type":"array<object>","nullable":"No","example":"[]","meaning":"Station image records","freshness":"reference"},
+        {"field":"description_short_ge","type":"string","nullable":"Yes","example":"varies","meaning":"Short Georgian station description","freshness":"reference"},
+        {"field":"description_short_en","type":"string","nullable":"Yes","example":"varies","meaning":"Short English station description","freshness":"reference"},
+        {"field":"station_type","type":"string","nullable":"Yes","example":"Georgian text","meaning":"Monitoring-station type","freshness":"reference"},
+        {"field":"st_full_address_ge","type":"string","nullable":"Yes","example":"varies","meaning":"Full Georgian station address","freshness":"reference"},
+        {"field":"st_full_address_en","type":"string","nullable":"Yes","example":"varies","meaning":"Full English station address","freshness":"reference"},
+        {"field":"representativeness_distance","type":"string","nullable":"Yes","example":"400","meaning":"Configured representativeness distance","freshness":"reference","notes":"Numeric-looking string; unit absent"}
+      ]},
+      {"name":"Station equipment","description":"stationequipment_set[*].","fields":[
+        {"field":"equipment","type":"object | null","nullable":"Yes","example":"null","meaning":"Optional physical equipment metadata","freshness":"reference"},
+        {"field":"substance","type":"object","nullable":"No","example":"{...}","meaning":"Pollutant definition, units, and AQI bands","freshness":"reference"},
+        {"field":"chart_color","type":"string","nullable":"Yes","example":"","meaning":"UI series color","freshness":"reference"},
+        {"field":"line_chart_dashstyle","type":"string","nullable":"Unknown","example":"Solid","meaning":"UI line style","freshness":"reference"},
+        {"field":"line_chart_linewidth","type":"integer","nullable":"Unknown","example":"1","meaning":"UI line width","freshness":"reference"},
+        {"field":"point_chart_linewidth","type":"integer","nullable":"Unknown","example":"1","meaning":"UI point-outline width","freshness":"reference"},
+        {"field":"point_chart_symbol","type":"string","nullable":"Yes","example":"circle","meaning":"UI point symbol","freshness":"reference"},
+        {"field":"point_chart_radius","type":"integer","nullable":"Unknown","example":"6","meaning":"UI point radius","freshness":"reference"},
+        {"field":"data1hour_set","type":"array<object>","nullable":"No","example":"[{\"value\":30.6958,\"date_time\":\"2026-07-22T13:00:00\"}]","meaning":"Hourly measurement series","freshness":"live"}
+      ]},
+      {"name":"Substance","description":"stationequipment_set[*].substance.","fields":[
+        {"field":"name","type":"string","nullable":"No","example":"PM10","meaning":"Pollutant code/name","freshness":"reference"},
+        {"field":"unit_ge","type":"string (HTML)","nullable":"No","example":"formatted unit","meaning":"Georgian/default formatted unit","freshness":"reference"},
+        {"field":"unit_en","type":"string (HTML)","nullable":"No","example":"μg/m<sup>3</sup>","meaning":"English formatted unit","freshness":"reference","notes":"CO observed in mg/m³"},
+        {"field":"annotation_ge","type":"string (HTML)","nullable":"Yes","example":"varies","meaning":"Long Georgian explanation","freshness":"reference"},
+        {"field":"annotation_en","type":"string (HTML)","nullable":"Yes","example":"varies","meaning":"Long English explanation","freshness":"reference"},
+        {"field":"annotation_short_ge","type":"string","nullable":"Yes","example":"varies","meaning":"Short Georgian label/explanation","freshness":"reference"},
+        {"field":"annotation_short_en","type":"string","nullable":"Yes","example":"varies","meaning":"Short English label/explanation","freshness":"reference"},
+        {"field":"airqualityindexlevel_set","type":"array<object>","nullable":"No","example":"[{...}]","meaning":"Pollutant-specific AQI bands","freshness":"reference"}
+      ]},
+      {"name":"AQI bands","description":"airqualityindexlevel_set[*]; PM10 examples shown.","fields":[
+        {"field":"good_from","type":"number","nullable":"No","example":"0","meaning":"Good lower threshold","freshness":"reference"},
+        {"field":"good_to","type":"number","nullable":"No","example":"20","meaning":"Good upper threshold","freshness":"reference"},
+        {"field":"good_color","type":"string","nullable":"No","example":"#35eee6","meaning":"Good display color","freshness":"reference"},
+        {"field":"fair_from","type":"number","nullable":"No","example":"20","meaning":"Fair lower threshold","freshness":"reference"},
+        {"field":"fair_to","type":"number","nullable":"No","example":"35","meaning":"Fair upper threshold","freshness":"reference"},
+        {"field":"fair_color","type":"string","nullable":"No","example":"#29a884","meaning":"Fair display color","freshness":"reference"},
+        {"field":"moderate_from","type":"number","nullable":"No","example":"35","meaning":"Moderate lower threshold","freshness":"reference"},
+        {"field":"moderate_to","type":"number","nullable":"No","example":"50","meaning":"Moderate upper threshold","freshness":"reference"},
+        {"field":"moderate_color","type":"string","nullable":"No","example":"#f0e641","meaning":"Moderate display color","freshness":"reference"},
+        {"field":"poor_from","type":"number","nullable":"No","example":"50","meaning":"Poor lower threshold","freshness":"reference"},
+        {"field":"poor_to","type":"number","nullable":"No","example":"100","meaning":"Poor upper threshold","freshness":"reference"},
+        {"field":"poor_color","type":"string","nullable":"No","example":"#fa504f","meaning":"Poor display color","freshness":"reference"},
+        {"field":"very_poor_from","type":"number","nullable":"No","example":"100","meaning":"Very-poor lower threshold","freshness":"reference"},
+        {"field":"very_poor_to","type":"number","nullable":"No","example":"1200","meaning":"Very-poor upper threshold","freshness":"reference"},
+        {"field":"very_poor_color","type":"string","nullable":"No","example":"#960432","meaning":"Very-poor display color","freshness":"reference"}
+      ]},
+      {"name":"Hourly measurement","description":"data1hour_set[*].","fields":[
+        {"field":"value","type":"number","nullable":"No","example":"30.6958333333333","meaning":"Hourly concentration in parent substance unit","freshness":"live"},
+        {"field":"date_time","type":"local datetime string","nullable":"No","example":"2026-07-22T13:00:00","meaning":"Measurement/aggregation hour","freshness":"live","notes":"Offset absent"}
+      ]}
+    ],
+    "samples": [{"label":"TSRT PM10 hourly reading","retrievedAt":"2026-07-22T13:37:00+04:00","format":"JSON","value":"{\"id\":6,\"municipality_id\":51,\"code\":\"TSRT\",\"lat\":41.7419,\"long\":44.77931,\"elev\":412,\"equipment_count\":13,\"stationequipment_set\":[{\"substance\":{\"name\":\"PM10\",\"unit_en\":\"μg/m<sup>3</sup>\"},\"data1hour_set\":[{\"value\":30.6958333333333,\"date_time\":\"2026-07-22T13:00:00\"}]}]}"}],
+    "caveats": ["Automatic observations are provisional until verified", "Some English/localized fields are empty or remain Georgian", "A station or pollutant series can be empty/delayed", "Pollutant units differ; CO used mg/m³ in the sample"],
+    "reliability": ["Source measurement time is supplied per value", "Five station objects returned for Tbilisi", "Coordinates and stable-looking station codes support joins", "Last-known values can be cached with original timestamps"],
+    "citations": [{"label":"Official air portal","url":"https://air.gov.ge/en/","type":"Primary"},{"label":"Monitoring network page","url":"https://www.air.gov.ge/en/pages/14/14","type":"Primary"},{"label":"Hourly JSON request","url":"https://air.gov.ge/api/get_data_1hour/?from_date_time=2026-07-22T11:00:00&to_date_time=2026-07-22T13:00:00&station_code=all&municipality_id=51&substance=all&last_data=true&chart=false&format=json","type":"Primary"}],
+    "snapshotPath":".agents/data-snapshots/air-tbilisi-2026-07-17.json",
+    "featured":true
+  },
+  {
+    "slug": "nea-river-gauges",
+    "name": "NEA current-day river gauge levels",
+    "shortName": "River gauges",
+    "category": "Environment",
+    "subcategory": "Hydrology",
+    "executiveSummary": "Official current-day river-gauge records with station IDs, coordinates, water level, date, and warning state, including one Vere–Tbilisi gauge at Svanidze.",
+    "provider": "National Environmental Agency of Georgia",
+    "sourceKind": "Official public-page backend",
+    "geography": "Selected Georgian river gauges; one explicitly Tbilisi-named Vere gauge",
+    "freshness": "Daily",
+    "updateCadence": "Current-day/daily in tested response; rendered page showed 00:00 observation time",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22T13:37:00+04:00 / 2026-07-22T09:37:00Z",
+    "accessSummary": "Unauthenticated JSON GET used by the official NEA river page.",
+    "license": "Unclear; no explicit data license or API terms found",
+    "recordCount": "16 gauge records at test time",
+    "keyEntities": ["River gauge reading", "Page-only station warning thresholds"],
+    "accessPoints": [
+      {"label":"Official river page","url":"https://meteo.gov.ge/hydrometeorology/Rivers","method":"GET","format":"HTML","authentication":"None observed"},
+      {"label":"River-pin JSON","url":"https://meteo.gov.ge/En/Hydrology/GetRiversPin","method":"GET","format":"JSON","authentication":"None observed","notes":"No published rate limit"}
+    ],
+    "schemas": [
+      {"name":"Gauge record","description":"One GetRiversPin array item.","fields":[
+        {"field":"HydrologicalDataRecordId","type":"integer","nullable":"No","example":"38764","meaning":"Measurement-record ID","freshness":"reference"},
+        {"field":"HydroMonitoringStationId","type":"integer","nullable":"No","example":"13","meaning":"Monitoring-station ID","freshness":"reference"},
+        {"field":"ElevationValue","type":"number","nullable":"No","example":"116","meaning":"Water level in centimetres","freshness":"live","notes":"Interpretation confirmed by official rendered page despite ambiguous field name"},
+        {"field":"HydroMonitoringStationName","type":"string","nullable":"No","example":"Vere-Tbilisi(Svanidze)","meaning":"Gauge/station name","freshness":"reference"},
+        {"field":"RiverName","type":"string","nullable":"No","example":"Vere-Tbilisi(Svanidze)","meaning":"River/display name","freshness":"reference"},
+        {"field":"HydroMonitoringStationLatitude","type":"number","nullable":"No","example":"41.71410732444746","meaning":"Gauge latitude","freshness":"reference"},
+        {"field":"HydroMonitoringStationLongitude","type":"number","nullable":"No","example":"44.74187171408082","meaning":"Gauge longitude","freshness":"reference"},
+        {"field":"MeasureTime","type":"date string","nullable":"No","example":"7/22/2026","meaning":"Observation date","freshness":"live","notes":"U.S.-style date; no time/offset"},
+        {"field":"HydroWarningStateId","type":"integer","nullable":"No","example":"10","meaning":"Source warning-state code","freshness":"derived"},
+        {"field":"HydroWarningStateDescription","type":"string","nullable":"No","example":"No Change","meaning":"Source warning/status description","freshness":"derived"}
+      ]},
+      {"name":"Rendered page additions","description":"Values visible on the official page but absent from GetRiversPin.","fields":[
+        {"field":"signal_threshold_cm","type":"number (HTML)","nullable":"Unknown","example":"210","meaning":"Station signal threshold","freshness":"reference"},
+        {"field":"danger_threshold_cm","type":"number (HTML)","nullable":"Unknown","example":"260","meaning":"Station danger threshold","freshness":"reference"},
+        {"field":"observation_datetime","type":"datetime (HTML)","nullable":"No","example":"22.07.2026 00:00","meaning":"Displayed observation time","freshness":"live"},
+        {"field":"water_level_cm","type":"number (HTML)","nullable":"No","example":"116","meaning":"Displayed water level","freshness":"live"},
+        {"field":"status","type":"string (HTML)","nullable":"No","example":"normal range","meaning":"Human warning status","freshness":"derived"}
+      ]}
+    ],
+    "samples": [{"label":"Vere–Tbilisi gauge","retrievedAt":"2026-07-22T13:37:00+04:00","format":"JSON","value":"{\"HydrologicalDataRecordId\":38764,\"HydroMonitoringStationId\":13,\"ElevationValue\":116,\"HydroMonitoringStationName\":\"Vere-Tbilisi(Svanidze)\",\"RiverName\":\"Vere-Tbilisi(Svanidze)\",\"HydroMonitoringStationLatitude\":41.71410732444746,\"HydroMonitoringStationLongitude\":44.74187171408082,\"MeasureTime\":\"7/22/2026\",\"HydroWarningStateId\":10,\"HydroWarningStateDescription\":\"No Change\"}"}],
+    "caveats": ["Daily/current-day rather than minute-level telemetry", "One Tbilisi gauge is not citywide flood coverage", "API date lacks time/offset", "Warning-state codebook is undocumented", "Page has described river monitoring as test mode"],
+    "reliability": ["HTTP 200 JSON returned 16 records", "Official page independently confirmed level units and station thresholds", "Latest value can be cached with its MeasureTime"],
+    "citations": [{"label":"Official NEA river page","url":"https://meteo.gov.ge/hydrometeorology/Rivers","type":"Primary"},{"label":"River JSON","url":"https://meteo.gov.ge/En/Hydrology/GetRiversPin","type":"Primary"}],
+    "snapshotPath":".agents/data-snapshots/vere-river-gauge-2026-07-22.json",
+    "featured":true
+  },
+  {
+    "slug": "nea-weather-warning-map",
+    "name": "NEA administrative weather-warning polygons",
+    "shortName": "Weather warnings",
+    "category": "Safety",
+    "subcategory": "Severe weather warnings",
+    "executiveSummary": "Official machine-readable current-state warning map for 74 administrative polygons, including Tbilisi, with boundary, status color, place name, and nullable warning detail/title/icon fields.",
+    "provider": "National Environmental Agency of Georgia",
+    "sourceKind": "Official public-page backend",
+    "geography": "74 administrative polygons across Georgia, including Tbilisi",
+    "freshness": "Live",
+    "updateCadence": "Current-state endpoint; exact publication cadence and response measurement time are absent",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22T13:40:00+04:00 / 2026-07-22T09:40:00Z",
+    "accessSummary": "Unauthenticated JSON GET used by the official warning map.",
+    "license": "Unclear; no explicit data license or API terms found",
+    "recordCount": "74 polygon records; all had the same color and null warning detail fields at validation",
+    "keyEntities": ["Administrative warning polygon"],
+    "accessPoints": [
+      {"label":"Official warning page","url":"https://meteo.gov.ge/En/Warnings","method":"GET","format":"HTML","authentication":"None observed"},
+      {"label":"Warning-map JSON","url":"https://meteo.gov.ge/En/Warnings/GetMap","method":"GET","format":"JSON","authentication":"None observed","notes":"Large full-polygons response; cache stable geometry"}
+    ],
+    "schemas": [{"name":"Administrative warning polygon","description":"One GetMap array item.","fields":[
+      {"field":"Pins","type":"array<object>","nullable":"No","example":"[{\"lng\":44.6,\"lat\":41.8},...]","meaning":"Polygon boundary vertices","freshness":"reference"},
+      {"field":"Pins[*].lng","type":"number","nullable":"No","example":"44.6","meaning":"Boundary longitude","freshness":"reference"},
+      {"field":"Pins[*].lat","type":"number","nullable":"No","example":"41.8","meaning":"Boundary latitude","freshness":"reference"},
+      {"field":"Color","type":"string","nullable":"No","example":"#86c55e","meaning":"Current map-fill/status color","freshness":"derived","notes":"Do not assign a status label without official legend semantics"},
+      {"field":"ID","type":"integer | string | null","nullable":"Yes","example":"null","meaning":"Active warning/object ID","freshness":"live"},
+      {"field":"Info","type":"string (possibly HTML) | null","nullable":"Yes","example":"null","meaning":"Warning popup detail","freshness":"live"},
+      {"field":"Village","type":"string","nullable":"No","example":"Tbilisi","meaning":"Administrative-area display name","freshness":"reference"},
+      {"field":"Title","type":"string | null","nullable":"Yes","example":"null","meaning":"Optional warning title","freshness":"live"},
+      {"field":"IconID","type":"integer | string | null","nullable":"Yes","example":"null","meaning":"Optional warning icon ID","freshness":"live"}
+    ]}],
+    "samples": [{"label":"Tbilisi warning state with geometry shortened","retrievedAt":"2026-07-22T13:40:00+04:00","format":"JSON","value":"{\"Pins\":[{\"lng\":44.6,\"lat\":41.8},{\"lng\":44.7,\"lat\":41.8}],\"Color\":\"#86c55e\",\"ID\":null,\"Info\":null,\"Village\":\"Tbilisi\",\"Title\":null,\"IconID\":null}","note":"Pins is deliberately shortened and is not a usable polygon fixture."}],
+    "caveats": ["Response has no measurement/publication timestamp", "Status color semantics were not authoritatively labelled in this pass", "All warning-specific fields were null at test time", "Full polygons make the response large", "Undocumented endpoint"],
+    "reliability": ["HTTP 200 JSON returned 74 areas", "Official JavaScript was inspected to confirm the fields drive the public map", "Stable geometry can be separated and cached from changing warning state"],
+    "citations": [{"label":"Official warning map","url":"https://meteo.gov.ge/En/Warnings","type":"Primary"},{"label":"Warning JSON","url":"https://meteo.gov.ge/En/Warnings/GetMap","type":"Primary"}],
+    "featured":true
+  },
+  {
+    "slug": "mepa-landfill-parcels",
+    "name": "MEPA landfill and transfer-site parcel polygons",
+    "shortName": "Waste-site parcels",
+    "category": "Environment",
+    "subcategory": "Waste infrastructure",
+    "executiveSummary": "Official ArcGIS polygon layer for landfill/transfer-site parcels with cadastral code, address, site type, area, and geometry. Machine-readable but static/reference rather than live collection or bin telemetry.",
+    "provider": "Ministry of Environmental Protection and Agriculture geoportal",
+    "sourceKind": "Official catalog or map",
+    "geography": "Georgia-wide; no Tbilisi-address feature found in the 47-record response",
+    "freshness": "Static reference",
+    "updateCadence": "Unknown; no update interval in inspected metadata",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Unauthenticated ArcGIS FeatureServer metadata and query endpoints supporting JSON/GeoJSON.",
+    "license": "Unclear; layer copyrightText was empty but no explicit open license was found",
+    "recordCount": "47 polygon features",
+    "keyEntities": ["Waste-site parcel feature"],
+    "accessPoints": [
+      {"label":"Layer metadata","url":"https://gisserver.mepa.gov.ge/arcgis/rest/services/WASTE/nagavsayrelebis_nakveTebi/FeatureServer/0","method":"GET","format":"ArcGIS JSON/HTML","authentication":"None observed"},
+      {"label":"All features as GeoJSON","url":"https://gisserver.mepa.gov.ge/arcgis/rest/services/WASTE/nagavsayrelebis_nakveTebi/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson","method":"GET","format":"GeoJSON","authentication":"None observed"}
+    ],
+    "schemas": [{"name":"Waste-site parcel feature","description":"Feature properties plus GeoJSON geometry.","fields":[
+      {"field":"properties.OBJECTID","type":"integer (OID)","nullable":"No","example":"1","meaning":"Layer-scoped feature ID","freshness":"reference"},
+      {"field":"properties.CADCODE","type":"string(100)","nullable":"Yes","example":"80.06.61.416","meaning":"Cadastral parcel code","freshness":"reference"},
+      {"field":"properties.REG_ZONE_ID","type":"number","nullable":"Yes","example":"80","meaning":"Registration-zone ID","freshness":"reference"},
+      {"field":"properties.NID","type":"number","nullable":"Yes","example":"25","meaning":"Source/site numeric identifier","freshness":"reference"},
+      {"field":"properties.N","type":"number","nullable":"Yes","example":"1","meaning":"Undocumented source number/order field","freshness":"reference"},
+      {"field":"properties.Address_geo","type":"string(255)","nullable":"Yes","example":"ბოლნისის რაიონი, სოფ. ანდრეევკა","meaning":"Georgian address","freshness":"reference"},
+      {"field":"properties.Address_eng","type":"string(255)","nullable":"Yes","example":"null","meaning":"English address","freshness":"reference"},
+      {"field":"properties.type_geo","type":"string(50)","nullable":"Yes","example":"მოქმედი","meaning":"Georgian site type/status","freshness":"reference"},
+      {"field":"properties.type_eng","type":"string(50)","nullable":"Yes","example":"null","meaning":"English site type/status","freshness":"reference"},
+      {"field":"properties.Shape__Area","type":"number","nullable":"Yes","example":"50316.34720485","meaning":"ArcGIS-stored polygon area","freshness":"derived","notes":"Verify source CRS/unit before treating as square metres"},
+      {"field":"geometry.type","type":"string","nullable":"No","example":"Polygon","meaning":"GeoJSON geometry type","freshness":"reference"},
+      {"field":"geometry.coordinates","type":"array","nullable":"No","example":"[[[44...,41...],...]]","meaning":"Parcel boundary in GeoJSON coordinate order","freshness":"reference"}
+    ]}],
+    "samples": [{"label":"Bolnisi operating landfill parcel","retrievedAt":"2026-07-22 research session","format":"GeoJSON","value":"{\"type\":\"Feature\",\"properties\":{\"OBJECTID\":1,\"CADCODE\":\"80.06.61.416\",\"REG_ZONE_ID\":80,\"NID\":25,\"N\":1,\"Address_geo\":\"ბოლნისის რაიონი, სოფ. ანდრეევკა\",\"Address_eng\":null,\"type_geo\":\"მოქმედი\",\"type_eng\":null,\"Shape__Area\":50316.34720485},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[]}}","note":"Geometry coordinates omitted in compact sample."}],
+    "caveats": ["Static infrastructure, not live waste operations", "No Tbilisi-address record found", "English fields were null in sample", "No explicit open license", "Update interval unknown"],
+    "reliability": ["ArcGIS layer publishes an explicit field schema", "All 47 features were retrieved", "Full layer is small enough to snapshot", "GeoJSON output is supported"],
+    "citations": [{"label":"Official ArcGIS layer","url":"https://gisserver.mepa.gov.ge/arcgis/rest/services/WASTE/nagavsayrelebis_nakveTebi/FeatureServer/0","type":"Primary"},{"label":"GeoJSON query","url":"https://gisserver.mepa.gov.ge/arcgis/rest/services/WASTE/nagavsayrelebis_nakveTebi/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson","type":"Primary"}]
+  },
+  {
+    "slug": "nea-tbilisi-forecast-html",
+    "name": "NEA Tbilisi multi-day weather forecast page",
+    "shortName": "NEA Tbilisi forecast",
+    "category": "Environment",
+    "subcategory": "Weather forecast",
+    "executiveSummary": "Official server-rendered day/night forecast values for Tbilisi. Current and useful, but no reusable forecast or observation JSON endpoint was validated, so this is HTML-only rather than a live-tested API source.",
+    "provider": "National Environmental Agency of Georgia",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi",
+    "freshness": "Periodic",
+    "updateCadence": "Periodic multi-day forecast; exact issuance cadence not established",
+    "evidence": "Page-verified",
+    "testedAt": "2026-07-22T13:41:44+04:00 / 2026-07-22T09:41:44Z",
+    "accessSummary": "Unauthenticated server-rendered HTML; no reusable structured endpoint validated.",
+    "license": "Unclear; no explicit data reuse license found",
+    "keyEntities": [
+      "Forecast period"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official forecast page",
+        "url": "https://meteo.gov.ge/En/",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "None observed"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Forecast period extracted from HTML",
+        "description": "Page-visible day/night forecast values.",
+        "fields": [
+          {
+            "field": "page_current_time",
+            "type": "datetime (HTML)",
+            "nullable": "No",
+            "example": "Wednesday, July 22, 2026 1:41:44 PM",
+            "meaning": "Server-rendered current time",
+            "freshness": "live"
+          },
+          {
+            "field": "forecast_date",
+            "type": "date (HTML)",
+            "nullable": "No",
+            "example": "Wednesday 22 Jul",
+            "meaning": "Forecast date",
+            "freshness": "reference"
+          },
+          {
+            "field": "part_of_day",
+            "type": "enum string",
+            "nullable": "No",
+            "example": "Night",
+            "meaning": "Day/night period",
+            "freshness": "reference"
+          },
+          {
+            "field": "weather_icon_url",
+            "type": "URL",
+            "nullable": "No",
+            "example": "varies",
+            "meaning": "Condition icon",
+            "freshness": "reference"
+          },
+          {
+            "field": "condition_text",
+            "type": "string",
+            "nullable": "Yes",
+            "example": "Light Shower possibility",
+            "meaning": "Expected condition",
+            "freshness": "derived"
+          },
+          {
+            "field": "temperature_c",
+            "type": "signed number/string",
+            "nullable": "No",
+            "example": "+21",
+            "meaning": "Forecast Celsius temperature",
+            "freshness": "derived"
+          },
+          {
+            "field": "wind_icon_url",
+            "type": "URL",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Wind-direction icon",
+            "freshness": "reference"
+          },
+          {
+            "field": "wind_direction",
+            "type": "string",
+            "nullable": "No",
+            "example": "Baffling Wind",
+            "meaning": "Expected wind direction/variability",
+            "freshness": "derived"
+          },
+          {
+            "field": "wind_speed_m_s",
+            "type": "range string",
+            "nullable": "No",
+            "example": "10-15",
+            "meaning": "Expected wind-speed range in m/s",
+            "freshness": "derived"
+          }
+        ]
+      }
+    ],
+    "samples": [
+      {
+        "label": "Current forecast values",
+        "retrievedAt": "2026-07-22T13:41:44+04:00",
+        "format": "HTML",
+        "value": "2026-07-22 night: Light Shower possibility, +21°C, Baffling Wind, 10–15 m/s; day: +34°C, West Wind, 8–13 m/s."
+      }
+    ],
+    "caveats": [
+      "HTML-only",
+      "Forecast rather than live observation",
+      "Condition icon alt text was not consistently populated",
+      "Page selectors may change"
+    ],
+    "reliability": [
+      "Official page visibly rendered values",
+      "Retrieval/server time was visible"
+    ],
+    "citations": [
+      {
+        "label": "Official NEA weather page",
+        "url": "https://meteo.gov.ge/En/",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "iliauni-seismic-events-html",
+    "name": "National Seismic Monitoring Centre earthquake event catalog",
+    "shortName": "Earthquake catalog",
+    "category": "Safety",
+    "subcategory": "Seismic events",
+    "executiveSummary": "Official, frequently updated HTML event table with UTC time, local magnitude, depth, coordinates, locality description, focal mechanism when present, and a manual/automatic marker. No JSON endpoint was validated.",
+    "provider": "Institute of Earth Sciences and National Seismic Monitoring Centre, Ilia State University",
+    "sourceKind": "Official catalog or map",
+    "geography": "Georgia and nearby seismic region",
+    "freshness": "Near real-time",
+    "updateCadence": "Event-driven publication; not guaranteed instant early warning",
+    "evidence": "Page-verified",
+    "testedAt": "2026-07-22T13:40:00+04:00 / 2026-07-22T09:40:00Z",
+    "accessSummary": "Unauthenticated paginated HTML; event ID is carried in detail-link query parameter.",
+    "license": "Publicly posted occurrence information, but no explicit open-data license found",
+    "keyEntities": [
+      "Seismic event"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official event catalog",
+        "url": "https://ies.iliauni.edu.ge/?page_id=183&lang=en",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "None observed"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Event table row",
+        "description": "Official HTML table columns plus event ID from URL.",
+        "fields": [
+          {
+            "field": "event_id",
+            "type": "integer derived from URL",
+            "nullable": "No",
+            "example": "585885",
+            "meaning": "Source event ID",
+            "freshness": "reference"
+          },
+          {
+            "field": "Time(UTC)",
+            "type": "datetime string",
+            "nullable": "No",
+            "example": "2026-07-21 20:34:49",
+            "meaning": "Earthquake origin time in UTC",
+            "freshness": "live"
+          },
+          {
+            "field": "Magnitude(ml)",
+            "type": "number",
+            "nullable": "No",
+            "example": "3.2",
+            "meaning": "Local magnitude",
+            "freshness": "live"
+          },
+          {
+            "field": "Fm",
+            "type": "image | empty",
+            "nullable": "Yes",
+            "example": "empty",
+            "meaning": "Focal-mechanism graphic",
+            "freshness": "live"
+          },
+          {
+            "field": "Depth(km)",
+            "type": "number",
+            "nullable": "Unknown",
+            "example": "16",
+            "meaning": "Hypocentral depth in kilometres",
+            "freshness": "live"
+          },
+          {
+            "field": "Lat/Long(degree)",
+            "type": "pair string",
+            "nullable": "No",
+            "example": "41.248/43.745",
+            "meaning": "Epicenter latitude/longitude",
+            "freshness": "live"
+          },
+          {
+            "field": "Region",
+            "type": "string/link",
+            "nullable": "Yes",
+            "example": "City Ninotsminda - East - 10km. Village Gorelovka - 4km.",
+            "meaning": "Human locality description",
+            "freshness": "derived"
+          },
+          {
+            "field": "M/A",
+            "type": "enum string",
+            "nullable": "Unknown",
+            "example": "M",
+            "meaning": "Manual/automatic processing marker",
+            "freshness": "live"
+          }
+        ]
+      }
+    ],
+    "samples": [
+      {
+        "label": "Event 585885 normalized from HTML",
+        "retrievedAt": "2026-07-22T13:40:00+04:00",
+        "format": "HTML",
+        "value": "{\"event_id\":585885,\"time_utc\":\"2026-07-21 20:34:49\",\"magnitude_ml\":3.2,\"depth_km\":16,\"latitude\":41.248,\"longitude\":43.745,\"region\":\"City Ninotsminda - East - 10km. Village Gorelovka - 4km.\",\"m_a\":\"M\"}",
+        "note": "Normalized illustration, not a native JSON response."
+      }
+    ],
+    "caveats": [
+      "HTML-only",
+      "Some region and focal-mechanism cells are blank",
+      "Not a prediction or guaranteed early-warning feed"
+    ],
+    "reliability": [
+      "Official table and latest-event detail were page-verified",
+      "UTC is explicit in source column"
+    ],
+    "citations": [
+      {
+        "label": "Official seismic catalog",
+        "url": "https://ies.iliauni.edu.ge/?page_id=183&lang=en",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "georoad-restrictions-html",
+    "name": "Roads Department national-road restrictions and works notices",
+    "shortName": "Road restrictions",
+    "category": "Transport",
+    "subcategory": "Road operations",
+    "executiveSummary": "Official event-driven notices about national-road closures, restrictions, clearing works, and restoration of traffic. Relevant to Tbilisi access routes, but not a municipal-street or traffic-speed feed and available only as HTML in this pass.",
+    "provider": "Roads Department of Georgia",
+    "sourceKind": "Official catalog or map",
+    "geography": "Georgian national roads; not comprehensive for Tbilisi municipal streets",
+    "freshness": "Near real-time",
+    "updateCadence": "Event-driven operational notices",
+    "evidence": "Page-verified",
+    "testedAt": "2026-07-22T13:40:00+04:00 / 2026-07-22T09:40:00Z",
+    "accessSummary": "Unauthenticated paginated HTML list/detail pages; no machine-readable endpoint validated.",
+    "license": "Unclear; no explicit data reuse license found",
+    "recordCount": "3 current list items rendered at validation",
+    "keyEntities": [
+      "Road notice"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official restrictions list",
+        "url": "https://www.georoad.ge/?act=news&func=menu&lang=eng&pid=1388404621",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "None observed"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Notice list item",
+        "description": "Fields extractable from the HTML list/detail pages.",
+        "fields": [
+          {
+            "field": "uid",
+            "type": "string/integer derived from URL",
+            "nullable": "No",
+            "example": "1784537836",
+            "meaning": "Notice ID",
+            "freshness": "reference"
+          },
+          {
+            "field": "title",
+            "type": "string",
+            "nullable": "No",
+            "example": "Georgian roadworks headline",
+            "meaning": "Notice title",
+            "freshness": "live"
+          },
+          {
+            "field": "published_at",
+            "type": "datetime string",
+            "nullable": "No",
+            "example": "20 July, 2026 12:56:56",
+            "meaning": "Publication time",
+            "freshness": "live"
+          },
+          {
+            "field": "detail_url",
+            "type": "URL",
+            "nullable": "No",
+            "example": "...?uid=1784537836",
+            "meaning": "Notice detail URL",
+            "freshness": "reference"
+          },
+          {
+            "field": "image_url",
+            "type": "URL",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Notice image",
+            "freshness": "reference"
+          },
+          {
+            "field": "excerpt",
+            "type": "string/HTML",
+            "nullable": "Yes",
+            "example": "",
+            "meaning": "List summary",
+            "freshness": "live"
+          },
+          {
+            "field": "detail_body",
+            "type": "string/HTML",
+            "nullable": "Yes",
+            "example": "",
+            "meaning": "Notice detail prose",
+            "freshness": "live"
+          }
+        ]
+      }
+    ],
+    "samples": [
+      {
+        "label": "Current list item",
+        "retrievedAt": "2026-07-22T13:40:00+04:00",
+        "format": "HTML",
+        "value": "uid=1784537836; published=20 July, 2026 12:56:56; title=ქუთაისი–წყალტუბო–ცაგერი–ლენტეხი–ლასდილის საავტომობილო გზაზე გაწმენდითი სამუშაოები გრძელდება"
+      }
+    ],
+    "caveats": [
+      "HTML-only",
+      "English route returned Georgian titles",
+      "Some detail pages had little body text",
+      "National roads rather than municipal streets"
+    ],
+    "reliability": [
+      "Official current list rendered three entries",
+      "Stable-looking UID detail links"
+    ],
+    "citations": [
+      {
+        "label": "Official Roads Department notices",
+        "url": "https://www.georoad.ge/?act=news&func=menu&lang=eng&pid=1388404621",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "gwp-water-interruptions-unresolved",
+    "name": "GWP Tbilisi water-supply interruption notices",
+    "shortName": "GWP interruptions",
+    "category": "Utilities",
+    "subcategory": "Water interruptions",
+    "executiveSummary": "The official GWP public page exposes searchable operational notices with affected places and expected timing, but direct access timed out and no reusable endpoint or live sample was validated in this session.",
+    "provider": "Georgian Water and Power",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi and Mtskheta service area",
+    "freshness": "Near real-time",
+    "updateCadence": "Operational/event-driven when accessible",
+    "evidence": "Page-verified",
+    "testedAt": "2026-07-22 research session; direct request timed out",
+    "accessSummary": "Public searchable page; reusable request schema unresolved and direct command-line request timed out.",
+    "license": "Unclear",
+    "keyEntities": [
+      "Water interruption notice"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official interruption page",
+        "url": "https://www.georgianwater.com/en/gadaudebeli-new",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "None expected on public page",
+        "notes": "Timed out in current validation"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Page-visible notice fields",
+        "description": "Reported fields visible in public notices; exact selectors/schema were not live-tested.",
+        "fields": [
+          {
+            "field": "notice_url/id",
+            "type": "URL/string",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Notice identity",
+            "freshness": "reference"
+          },
+          {
+            "field": "posted_date",
+            "type": "date/datetime",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Publication time",
+            "freshness": "live"
+          },
+          {
+            "field": "district",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Affected district",
+            "freshness": "live"
+          },
+          {
+            "field": "affected_streets",
+            "type": "string/list",
+            "nullable": "Unknown",
+            "example": "long Georgian address list",
+            "meaning": "Affected streets/addresses",
+            "freshness": "live"
+          },
+          {
+            "field": "reason_or_work_type",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "emergency works",
+            "meaning": "Reason for limitation",
+            "freshness": "live"
+          },
+          {
+            "field": "interruption_start",
+            "type": "datetime",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Supply-stop start",
+            "freshness": "live"
+          },
+          {
+            "field": "expected_resume",
+            "type": "datetime",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Estimated restoration",
+            "freshness": "live"
+          }
+        ]
+      }
+    ],
+    "samples": [],
+    "caveats": [
+      "No live-tested endpoint or sample",
+      "Official page timed out",
+      "Expected restoration is not confirmed restoration",
+      "Third-party planned-work mirrors may miss emergencies"
+    ],
+    "reliability": [
+      "Official avenue identified",
+      "Indexed/public UI supports date/address search"
+    ],
+    "citations": [
+      {
+        "label": "Official GWP interruption page",
+        "url": "https://www.georgianwater.com/en/gadaudebeli-new",
+        "type": "Primary"
+      },
+      {
+        "label": "Third-party planned-work fallback",
+        "url": "https://tbilisi.blog/water-outages/",
+        "type": "Context"
+      }
+    ]
+  },
+  {
+    "slug": "tbilisi-municipal-services-map-unresolved",
+    "name": "Tbilisi Municipal Services Map operational and reference layers",
+    "shortName": "MS Map",
+    "category": "Civic infrastructure",
+    "subcategory": "Municipal map layers",
+    "executiveSummary": "Official map visibly catalogs temporary traffic schemes, street rehabilitation, transport, parking, applications, cadastral, boundary, greenery, and hydrography layers. Candidate backend paths named in the public client all returned 404 to direct tests, so record schemas remain unresolved.",
+    "provider": "Municipal Services Development Agency",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi",
+    "freshness": "Unknown",
+    "updateCadence": "Mixed: operational for traffic/works, reference for cadastral/boundary layers",
+    "evidence": "Catalog-verified",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Public interactive map. JavaScript API base and method names found, but direct GET and POST tests returned 404.",
+    "license": "Unclear",
+    "keyEntities": [
+      "Map layer catalog",
+      "Selected map object (unresolved)"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official map",
+        "url": "https://ms.gov.ge/msmap/",
+        "method": "GET",
+        "format": "HTML/interactive map",
+        "authentication": "None observed"
+      },
+      {
+        "label": "Candidate API base",
+        "url": "https://api.municipal.gov.ge",
+        "method": "GET/POST",
+        "format": "Unknown",
+        "authentication": "Unknown",
+        "notes": "Candidate paths /core-api/v1/search/tbilisi-roads-maintenance, /core-api/v1/private-parking-lots/, /core-api/v1/zonal-parking/search-by-location returned 404"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Known catalog/UI state only",
+        "description": "Not a record schema; fields exposed by public map navigation/catalog.",
+        "fields": [
+          {
+            "field": "layer/category label",
+            "type": "string (UI)",
+            "nullable": "No",
+            "example": "temporary traffic schemes",
+            "meaning": "Visible public map layer name",
+            "freshness": "reference"
+          },
+          {
+            "field": "lrId",
+            "type": "query parameter",
+            "nullable": "Yes",
+            "example": "varies",
+            "meaning": "Selected layer/resource state",
+            "freshness": "reference"
+          },
+          {
+            "field": "objId",
+            "type": "query parameter",
+            "nullable": "Yes",
+            "example": "varies",
+            "meaning": "Selected object state",
+            "freshness": "reference"
+          },
+          {
+            "field": "orgId",
+            "type": "query parameter",
+            "nullable": "Yes",
+            "example": "varies",
+            "meaning": "Selected organization state",
+            "freshness": "reference"
+          }
+        ]
+      }
+    ],
+    "samples": [],
+    "caveats": [
+      "No record endpoint validated",
+      "Direct candidate path tests returned 404",
+      "Mixed live/reference layer semantics",
+      "Do not invent fields from client method names"
+    ],
+    "reliability": [
+      "Official map and layer catalog were page-verified",
+      "Candidate API base and paths were extracted from shipped JavaScript"
+    ],
+    "citations": [
+      {
+        "label": "Official Municipal Services Map",
+        "url": "https://ms.gov.ge/msmap/",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "tbilisi-parking-reference-only",
+    "name": "Tbilisi regulated parking-space inventory",
+    "shortName": "Parking inventory",
+    "category": "Transport",
+    "subcategory": "Parking",
+    "executiveSummary": "Official pages and ordinance PDFs define zonal parking places and capacities, but no public feed for live occupancy, available spaces, payments, or vehicles was found.",
+    "provider": "Tbilisi Parking / Tbilisi municipal authorities",
+    "sourceKind": "Official download",
+    "geography": "Tbilisi",
+    "freshness": "Static reference",
+    "updateCadence": "Updated through ordinances; not live",
+    "evidence": "Page-verified",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Public web pages and PDF ordinance tables; no live occupancy endpoint found.",
+    "license": "Unclear",
+    "keyEntities": [
+      "Designated parking area"
+    ],
+    "accessPoints": [
+      {
+        "label": "Official parking portal",
+        "url": "https://parking.tbilisi.gov.ge",
+        "method": "GET",
+        "format": "HTML/PDF",
+        "authentication": "None for public pages"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Ordinance parking row",
+        "description": "Representative official PDF columns; exact headings vary by ordinance.",
+        "fields": [
+          {
+            "field": "zone_code",
+            "type": "string (PDF)",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Regulated parking zone",
+            "freshness": "reference"
+          },
+          {
+            "field": "parking_territory_or_address",
+            "type": "string (PDF)",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Defined parking location",
+            "freshness": "reference"
+          },
+          {
+            "field": "sign_or_placement",
+            "type": "string (PDF)",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Sign/position description",
+            "freshness": "reference"
+          },
+          {
+            "field": "space_count",
+            "type": "integer (PDF)",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Designated capacity",
+            "freshness": "reference"
+          },
+          {
+            "field": "disabled_space_count",
+            "type": "integer (PDF)",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Accessible designated spaces",
+            "freshness": "reference"
+          }
+        ]
+      }
+    ],
+    "samples": [],
+    "caveats": [
+      "No live occupancy/free-space data",
+      "PDF extraction may be required",
+      "Capacity is not availability"
+    ],
+    "reliability": [
+      "Official portal and ordinance publication route identified"
+    ],
+    "citations": [
+      {
+        "label": "Official parking portal",
+        "url": "https://parking.tbilisi.gov.ge",
+        "type": "Primary"
+      }
+    ]
+  }
+]

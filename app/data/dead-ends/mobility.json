@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Tbilisi Airport live flight board reuse",
+    "status": "Restricted",
+    "reason": "The official board is live and visibly contains scheduled, estimated and actual times, gate, check-in/carousel and status, but its disclaimer says flight information may not be used or published without prior written consent of TAV Urban Georgia LLC. A machine endpoint was deliberately not reverse-engineered after this restriction was verified.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://tbilisiairport.com/en-en/flights/departure-flights",
+      "https://tbilisiairport.com/en-en/flights/arrival-flights"
+    ],
+    "boundary": "Available for human viewing, not a reusable public-data source unless TAV Urban Georgia grants written permission. Do not ingest or republish it in the catalog as open data."
+  },
+  {
+    "name": "Tbilisi public traffic speeds, congestion, incidents and cameras",
+    "status": "Unavailable",
+    "reason": "No official structured current incident list, 511-style feed, public traffic-camera stream, loop-detector speeds or floating-car speed API was validated. Commercial map products display traffic but require commercial terms, credentials, partnership or UI-only use. The municipal map exposes traffic-related layer names, but not a resolved record API.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://ms.gov.ge/msmap/",
+      "https://api.municipal.gov.ge"
+    ],
+    "boundary": "Do not describe commercial traffic overlays or an unresolved municipal layer catalog as an open Tbilisi traffic feed. A future source must expose reusable structured records or documented streams with clear terms."
+  },
+  {
+    "name": "Live Tbilisi parking occupancy",
+    "status": "Not found",
+    "reason": "Official sources provide parking locations, zone codes and static capacity-style information, but no sensor occupancy, entrance/exit counts, available-space counts, active-session totals or enforcement state was validated. Wording such as 'free lots' in the customer application concerns eligibility and must not be treated as live empty-space availability.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://parking.tbilisi.gov.ge/",
+      "https://parking.tbilisi.gov.ge/assets/files/zonal-parking-attachment.pdf",
+      "https://ms.gov.ge/msmap/"
+    ],
+    "boundary": "The coded parking inventory is catalogable as static reference data; current bay availability is not. Do not infer occupancy from capacity, eligibility, payment or enforcement records."
+  },
+  {
+    "name": "Tbilisi micromobility and GBFS availability",
+    "status": "Not found",
+    "reason": "The current MobilityData GBFS systems registry was checked in full and contained no Tbilisi or Georgia system. Bolt's public Tbilisi city page did not expose a local scooter or bike GBFS endpoint. Public Bolt GBFS feeds in other jurisdictions do not establish the existence or reuse rights of a Tbilisi feed.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://github.com/MobilityData/gbfs/blob/master/systems.csv",
+      "https://bolt.eu/en/cities/tbilisi/"
+    ],
+    "boundary": "No public dock, scooter, battery, availability or trip-history dataset was validated. Recheck operator announcements and the GBFS registry later; do not transpose another city's feed."
+  },
+  {
+    "name": "Tbilisi taxi and ride-hailing vehicle data",
+    "status": "Unavailable",
+    "reason": "No genuinely public taxi GPS, driver-supply, pickup/drop-off, aggregated origin-destination, fare-estimate or wait-time feed was found. Bolt publicly lists Tbilisi service categories, while operational vehicle and trip information remains app/session/commercial data.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://bolt.eu/en/cities/tbilisi/"
+    ],
+    "boundary": "Do not reverse-engineer authenticated consumer applications or characterize session-bound commercial responses as public data. A catalogable source would need documented public access and reuse terms."
+  },
+  {
+    "name": "Tbilisi municipal map programmatic extraction",
+    "status": "Catalog-verified; endpoint unresolved",
+    "reason": "The public municipal map visibly exposes Transportation, Temporary traffic scheme, Rehabilitation of streets, Infrastructure and zonal/private parking-related layers. Shipped JavaScript names api.municipal.gov.ge and client paths for roads maintenance and parking, but required request bodies and context were not recoverable from the generated client alone. Direct unauthenticated and Swagger/OpenAPI guesses returned 404.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://ms.gov.ge/msmap/",
+      "https://api.municipal.gov.ge",
+      "https://api.municipal.gov.ge/core-api/v1/search/tbilisi-roads-maintenance",
+      "https://api.municipal.gov.ge/core-api/v1/zonal-parking/search-by-location",
+      "https://api.municipal.gov.ge/core-api/v1/zonal-parking/{zoneCode}"
+    ],
+    "boundary": "The UI and layer catalog are real, but no field schema or reusable record API should be published until a valid request contract, response schema and terms are independently validated."
+  }
+]

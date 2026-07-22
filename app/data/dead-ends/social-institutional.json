@@ -1,0 +1,123 @@
+[
+  {
+    "name": "EMIS public school-coordinate ArcGIS service",
+    "status": "Unavailable",
+    "reason": "The official Schools Portal JavaScript references an ArcGIS school map, but a direct public ArcGIS REST request returned 499 Token Required. The validated EMIS school profile JSON contains address but no latitude/longitude.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://skolebi.emis.ge/",
+      "https://arcgis.emis.ge/arcgis/rest/services/portal_schools/portal_schools/MapServer"
+    ],
+    "boundary": "Do not claim that the EMIS school-coordinate layer is a public reusable API. Join EMIS to a separately licensed geocoder, NSDI, or OSM only with explicit uncertainty and identity matching."
+  },
+  {
+    "name": "Geostat PXWeb statistical value POST",
+    "status": "Metadata available; values endpoint failed",
+    "reason": "Official table metadata GET requests returned full dimensions, but repeated valid-looking PXWeb POST queries to the same .px URLs returned IIS HTTP 404. No statistical value row was machine-retrieved in the current session.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://pc-axis.geostat.ge/PXWeb/api/v1/en/Database/",
+      "https://pc-axis.geostat.ge/PXWeb/api/v1/en/Database/Social%20Statistics/Social%20Protection/Persons_Receiving_Pension_by_Municipalities.px",
+      "https://pc-axis.geostat.ge/PXWeb/pxweb/en/Database/"
+    ],
+    "boundary": "Catalog metadata is usable and is included in the source inventory. Do not present metadata members as observations; use the human UI export or revalidate the provider's POST contract before ingesting values."
+  },
+  {
+    "name": "Central Election Commission reusable results feed",
+    "status": "Unavailable",
+    "reason": "The official election-results host returned Cloudflare HTTP 403 to the current automated request, and no documented reusable current JSON or CSV endpoint was validated.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://cesko.ge/",
+      "https://results.cec.gov.ge/"
+    ],
+    "boundary": "Do not scrape around access controls or infer a machine-readable election dataset from the visible results UI. A future catalog entry needs a documented/public record endpoint, exact schema, sample, and reuse terms."
+  },
+  {
+    "name": "eHealth / HMIS operational health and social-program data",
+    "status": "Authenticated modules; no public records API validated",
+    "reason": "The official portal visibly lists healthcare-program administration, facility licensing, immunization stock, referrals, Tbilisi municipal modules and social-program modules, but the record-level operational systems require authenticated roles. No public facility-capacity, waiting-time, bed, stock, case or beneficiary API was validated.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://ehealth.moh.gov.ge/",
+      "https://ehealth.moh.gov.ge/Hmis/Portal/List.aspx?languagePair=en-US"
+    ],
+    "boundary": "Public module names and manuals prove that internal data exists, not that it is public. Do not probe authenticated routes or expose health/beneficiary records. Use aggregate Geostat tables and NSDI facility reference points instead."
+  },
+  {
+    "name": "Social Service Agency direct live benefits and beneficiary data",
+    "status": "Not found",
+    "reason": "No public structured endpoint was validated for current application queues, benefit payments, beneficiary-level records, service-center load, appointments or case status. Geostat exposes annual municipal pension and subsistence-allowance aggregates, which are a different and safer data class.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://ehealth.moh.gov.ge/",
+      "https://pc-axis.geostat.ge/PXWeb/api/v1/en/Database/Social%20Statistics/Social%20Protection/"
+    ],
+    "boundary": "Do not infer live social-service operations or individual eligibility from annual aggregates. Beneficiary-level social-protection data is sensitive and outside the public-data scope."
+  },
+  {
+    "name": "NAPR Entrepreneur Registry bulk company data",
+    "status": "Page-verified; bulk/API route not validated",
+    "reason": "The official English registry search page supports company ID/name/legal-form searches and exposes registration applications/documents, but no documented bulk or stable records API was found in the current check. Documents can contain personal data.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://enreg.reestri.gov.ge/main.php?c=app&l=en&m=search_form"
+    ],
+    "boundary": "Treat the site as an entity-by-entity human search, not an open bulk business dataset. Do not automate document harvesting or republish personal data without a clear legal and licensing basis."
+  },
+  {
+    "name": "Geostat Statistical Business Register bulk reuse",
+    "status": "Page-verified with transport and quality failures",
+    "reason": "The official page says the Statistical Business Register is updated monthly and exposes many filters, but the HTTPS certificate had a hostname mismatch and the response leaked extensive PHP notices. No clean JSON/CSV contract or explicit reuse terms were validated.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://www.br.geostat.ge/register_geo/?lang=en",
+      "http://br.geostat.ge/register_geo/?lang=en"
+    ],
+    "boundary": "Do not promote the current HTML workflow as a stable API. Head/partner fields can identify people and require minimization. Revisit if Geostat publishes an official download or documented endpoint."
+  },
+  {
+    "name": "Courts of Georgia uniform structured statistics feed",
+    "status": "Page-verified; no uniform API",
+    "reason": "Official court and Tbilisi appellate/city-court pages publish monthly, quarterly and annual statistics, usually as human-facing pages or attachments. No consistent machine-readable endpoint and field schema covering courts and periods was validated.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://www.court.ge/eng_statistics",
+      "https://tbappeal.court.ge/ka/page/siskhlis-samartlis-sakmeebi",
+      "https://tcc.court.ge/"
+    ],
+    "boundary": "Court publications are catalogable as document series only after per-document extraction and schema verification. Do not mix public case/party notification data into aggregate court statistics."
+  },
+  {
+    "name": "Courts public-notification search as a civic dataset",
+    "status": "Accessible UI; excluded on privacy and purpose grounds",
+    "reason": "The public notification UI visibly has case number, date, court, notification type, recipient, parties and period, but the records can identify litigants and are published for legal notice rather than bulk reuse. No bulk collection was attempted.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://info.court.ge/PublicNotification"
+    ],
+    "boundary": "Do not bulk-ingest, profile, or republish recipients and parties for a general civic-data catalog. A narrowly justified legal-research use would require a separate privacy and terms review."
+  },
+  {
+    "name": "Ministry of Internal Affairs structured crime-statistics API",
+    "status": "Documents available; API not found",
+    "reason": "The Ministry publishes current and historical registered-crime statistics as detailed PDFs, but no structured JSON/CSV API was validated. Geostat has annual crime categories but not the full row-level detail of the MIA publications.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://info.police.ge/",
+      "https://info.police.ge/uploads/6895febc467a5.pdf"
+    ],
+    "boundary": "Treat MIA material as a PDF document series until each publication is parsed, field-verified and given a clear period/geography. Do not label it live incident data."
+  },
+  {
+    "name": "Official Tbilisi accessibility registry",
+    "status": "Not found",
+    "reason": "No official structured registry was validated for wheelchair access, lifts, curb cuts, tactile paving, accessible toilets, step-free routing or temporary accessibility failures. NSDI loc_label describes physical location class, not accessibility.",
+    "testedAt": "2026-07-22 Asia/Tbilisi",
+    "checkedUrls": [
+      "https://nsdi.gov.ge/en/geoportal",
+      "https://www.openstreetmap.org/"
+    ],
+    "boundary": "OSM accessibility tags are the available community source, but missing tags mean unknown and coverage cannot be treated as a compliance audit. Do not reinterpret NSDI loc_label as access status."
+  }
+]

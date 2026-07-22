@@ -1,0 +1,546 @@
+[
+  {
+    "slug": "cdse-sentinel-2-l2a-tbilisi",
+    "name": "Copernicus Sentinel-2 Level-2A scenes over Tbilisi",
+    "shortName": "Sentinel-2 Tbilisi",
+    "category": "Earth observation",
+    "subcategory": "Multispectral surface reflectance",
+    "executiveSummary": "The Copernicus Data Space STAC catalog returns current Sentinel-2 Level-2A tiles intersecting Tbilisi. Each item contains acquisition and publication times, exact footprint, orbit and processing metadata, scene-class percentages, and assets for bottom-of-atmosphere reflectance bands, scene classification, cloud/snow probability, aerosol, water-vapour and true-color imagery at 10–60 metre resolution. Catalog search is public; downloading full products or band assets requires CDSE OIDC or S3 credentials.",
+    "provider": "European Commission / ESA, hosted by Copernicus Data Space Ecosystem",
+    "sourceKind": "Official documented API",
+    "geography": "Global; validated against a Tbilisi bbox (44.70,41.67,44.88,41.80)",
+    "freshness": "Near real-time",
+    "updateCadence": "New scenes by satellite revisit; tested item was acquired 2026-07-19 and published the same day under PT24H/NRT metadata",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:55 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated STAC search over HTTPS. Item metadata are public. Asset hrefs use authenticated CDSE S3 or OIDC-protected HTTPS downloads; create a free CDSE account and do not treat catalog access as anonymous raster access.",
+    "license": "Copernicus Sentinel data are governed by the Legal Notice on the use of Copernicus Sentinel Data and Service Information; STAC declares license=other rather than an SPDX identifier",
+    "licenseUrl": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+    "recordCount": "2 returned with limit=2 for 2026-07-01 through 2026-07-22; first tile fully covers the Tbilisi bbox",
+    "keyEntities": ["STAC FeatureCollection", "Sentinel-2 scene/item", "Scene statistics", "Raster band asset"],
+    "accessPoints": [
+      {"label":"Tbilisi STAC search","url":"https://stac.dataspace.copernicus.eu/v1/search?bbox=44.70,41.67,44.88,41.80&collections=sentinel-2-l2a&datetime=2026-07-01T00:00:00Z/2026-07-22T23:59:59Z&limit=2","method":"GET","format":"GeoJSON/STAC JSON","authentication":"None for catalog search"},
+      {"label":"Collection metadata","url":"https://stac.dataspace.copernicus.eu/v1/collections/sentinel-2-l2a","method":"GET","format":"STAC Collection JSON","authentication":"None"},
+      {"label":"CDSE STAC documentation","url":"https://documentation.dataspace.copernicus.eu/APIs/STAC.html","method":"GET","format":"HTML documentation","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"STAC search response","description":"FeatureCollection returned by /v1/search.","fields":[
+        {"field":"type","type":"string","nullable":"No","example":"FeatureCollection","meaning":"GeoJSON response type","freshness":"reference"},
+        {"field":"numberReturned","type":"integer","nullable":"No","example":"2","meaning":"Items in this page","freshness":"derived"},
+        {"field":"features[]","type":"array<STAC Item>","nullable":"No","example":"2 items","meaning":"Matching satellite scenes","freshness":"reference"},
+        {"field":"links[]","type":"array<object>","nullable":"No","example":"next/root/self links","meaning":"Pagination and API navigation","freshness":"derived"}
+      ]},
+      {"name":"Sentinel-2 STAC Item","description":"Scene identity, footprint, timing, processing and scene-class metadata.","fields":[
+        {"field":"id","type":"string","nullable":"No","example":"S2A_MSIL2A_20260719T080731_N0512_R035_T38TMM_20260719T124959","meaning":"Unique product/item identifier","freshness":"reference"},
+        {"field":"collection","type":"string","nullable":"No","example":"sentinel-2-l2a","meaning":"STAC collection","freshness":"reference"},
+        {"field":"bbox","type":"[west,south,east,north]","nullable":"No","example":"[43.7835167,41.4575152,45.1186942,42.4526297]","meaning":"Scene bounds in WGS84","freshness":"reference"},
+        {"field":"geometry","type":"GeoJSON Polygon","nullable":"No","example":"tile footprint polygon","meaning":"Exact scene footprint","freshness":"reference"},
+        {"field":"properties.datetime / start_datetime / end_datetime","type":"ISO datetime","nullable":"No","example":"2026-07-19T08:07:31.024Z","meaning":"Acquisition instant or interval","freshness":"reference"},
+        {"field":"properties.created / published / updated","type":"ISO datetime","nullable":"No","example":"2026-07-19T13:47:36.432355Z","meaning":"Catalog/product lifecycle times","freshness":"reference"},
+        {"field":"properties.platform / constellation / instruments[]","type":"string / array","nullable":"No","example":"sentinel-2a / sentinel-2 / [msi]","meaning":"Spacecraft, mission and sensor","freshness":"reference"},
+        {"field":"properties.grid:code","type":"string","nullable":"No","example":"MGRS-38TMM","meaning":"MGRS tile","freshness":"reference"},
+        {"field":"properties.gsd","type":"number","nullable":"No","example":"10","meaning":"Nominal finest ground sample distance in metres","freshness":"reference"},
+        {"field":"properties.eo:cloud_cover / eo:snow_cover","type":"percentage number","nullable":"No","example":"93.67 / 0","meaning":"Cloud and snow coverage percentages","freshness":"derived"},
+        {"field":"properties.statistics","type":"object of percentage numbers","nullable":"No","example":"{vegetation:3.904744,water:0.105666,nodata:7.936981,...}","meaning":"Scene-class percentages: water, nodata, dark area, vegetation, thin cirrus, cloud shadow, unclassified, not vegetated, high/medium cloud probability and saturated/defective","freshness":"derived"},
+        {"field":"properties.product:type / processing:level / processing:version","type":"string","nullable":"No","example":"S2MSI2A / L2 / 05.12","meaning":"Product and processing specification","freshness":"reference"},
+        {"field":"properties.product:timeliness / product:timeliness_category","type":"string","nullable":"No","example":"PT24H / NRT","meaning":"Product delivery class","freshness":"reference"},
+        {"field":"properties.sat:absolute_orbit / sat:relative_orbit / sat:orbit_state","type":"integer / integer / enum","nullable":"No","example":"57833 / 35 / descending","meaning":"Orbit identifiers and direction","freshness":"reference"},
+        {"field":"properties.view:azimuth / view:incidence_angle / view:sun_azimuth / view:sun_elevation","type":"degree numbers","nullable":"No","example":"285.35 / 7.85 / 144.53 / 65.37","meaning":"Sensor and solar viewing geometry","freshness":"reference"},
+        {"field":"properties._private.product_name / product_size / product_uuid / visible","type":"string / integer / UUID / boolean","nullable":"No","example":"SAFE name / 888327944 / UUID / true","meaning":"Catalog product identity, byte size and visibility","freshness":"reference"},
+        {"field":"assets","type":"object keyed by asset name","nullable":"No","example":"B02_10m, B04_10m, B08_10m, SCL_20m, thumbnail…","meaning":"Band, mask, metadata and product downloads","freshness":"reference"}
+      ]},
+      {"name":"Sentinel-2 asset","description":"Common asset metadata; band-specific assets expose raster measurement semantics.","fields":[
+        {"field":"href / alternate.https.href","type":"URI","nullable":"No","example":"s3://eodata/...B04_10m.jp2","meaning":"Authenticated S3 and optional HTTPS download locations","freshness":"reference"},
+        {"field":"type / title / roles[]","type":"string / string / array","nullable":"No","example":"image/jp2 / Red (band 4) - 10m / [data,reflectance,...]","meaning":"Media type, human label and asset roles","freshness":"reference"},
+        {"field":"bands[]","type":"array<object>","nullable":"Yes","example":"{name:B04,description:Red,eo:common_name:red,eo:center_wavelength:0.665}","meaning":"Spectral-band description","freshness":"reference"},
+        {"field":"gsd / proj:code / proj:bbox / proj:shape / proj:transform","type":"number / string / arrays","nullable":"Yes","example":"10 / EPSG:32638 / [399960,…] / [10980,10980]","meaning":"Raster resolution, CRS, bounds, dimensions and affine transform","freshness":"reference"},
+        {"field":"data_type / nodata / raster:scale / raster:offset","type":"string / number / number / number","nullable":"Yes","example":"uint16 / 0 / 0.0001 / -0.1","meaning":"Stored-pixel type, missing value and reflectance conversion","freshness":"reference"},
+        {"field":"file:size / file:checksum / file:local_path","type":"integer / string / string","nullable":"Yes","example":"112767964 / checksum / SAFE path","meaning":"File validation and product path metadata","freshness":"reference"},
+        {"field":"asset keys","type":"enumeration","nullable":"No","example":"AOT at 10/20/60m; B01–B12 and B8A at native/resampled resolutions; CLD, SCL, SNW, TCI, WVP; Product; product/granule/datastrip/INSPIRE metadata; manifest; thumbnail","meaning":"All data families present in the tested item","freshness":"reference"}
+      ]}
+    ],
+    "samples": [{"label":"Tbilisi-overlapping Sentinel-2 item","retrievedAt":"2026-07-22 13:55 Asia/Tbilisi","format":"JSON","value":"{\"id\":\"S2A_MSIL2A_20260719T080731_N0512_R035_T38TMM_20260719T124959\",\"collection\":\"sentinel-2-l2a\",\"bbox\":[43.7835167,41.4575152,45.1186942,42.4526297],\"properties\":{\"datetime\":\"2026-07-19T08:07:31.024Z\",\"platform\":\"sentinel-2a\",\"grid:code\":\"MGRS-38TMM\",\"eo:cloud_cover\":93.67,\"statistics\":{\"vegetation\":3.904744,\"water\":0.105666,\"cloud_shadow\":0.628242},\"sat:relative_orbit\":35},\"assetKeys\":[\"B02_10m\",\"B04_10m\",\"B08_10m\",\"SCL_20m\",\"thumbnail\"]}"}],
+    "caveats": ["Catalog metadata are anonymous but actual raster assets require CDSE credentials", "The sample was 93.67% cloudy; cloud filtering is essential", "Scene statistics describe the entire MGRS tile, not just the Tbilisi bbox", "Reflectance bands require scale and offset application", "NDVI is not a supplied asset; it must be derived from red and NIR with cloud/scene masking"],
+    "reliability": ["Live STAC query returned current Tbilisi-intersecting items", "Collection and item schemas follow STAC with EO, projection, raster, satellite and processing extensions", "Product UUID, checksums and file sizes support reproducible downloads"],
+    "citations": [
+      {"label":"CDSE Sentinel-2 L2A collection","url":"https://stac.dataspace.copernicus.eu/v1/collections/sentinel-2-l2a","type":"Primary"},
+      {"label":"CDSE STAC documentation","url":"https://documentation.dataspace.copernicus.eu/APIs/STAC.html","type":"Documentation"},
+      {"label":"Sentinel data legal notice","url":"https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "cdse-sentinel-1-grd-tbilisi",
+    "name": "Copernicus Sentinel-1 GRD radar scenes over Tbilisi",
+    "shortName": "Sentinel-1 Tbilisi",
+    "category": "Earth observation",
+    "subcategory": "Synthetic-aperture radar",
+    "executiveSummary": "Copernicus Data Space exposes current Sentinel-1 Ground Range Detected radar acquisitions intersecting Tbilisi. Unlike optical imagery, C-band SAR works through clouds and at night. The tested same-day Sentinel-1C item includes VV and VH polarization rasters, acquisition and publication timestamps, exact footprint, orbit, incidence angle, instrument mode and 10-metre range/azimuth pixel spacing. Public catalog search is anonymous; raster downloads require CDSE credentials.",
+    "provider": "European Commission / ESA, hosted by Copernicus Data Space Ecosystem",
+    "sourceKind": "Official documented API",
+    "geography": "Global; validated against a Tbilisi bbox",
+    "freshness": "Near real-time",
+    "updateCadence": "Per Sentinel-1 acquisition; tested scene started 2026-07-22 03:07:46Z and was published 05:17:46Z",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 14:03 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated STAC search. VV/VH measurement rasters and SAFE product downloads use authenticated CDSE S3/OIDC access.",
+    "license": "Copernicus Sentinel data legal notice; STAC declares license=other",
+    "licenseUrl": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+    "recordCount": "2 returned with limit=2 for 2026-07-01 through 2026-07-22",
+    "keyEntities": ["Sentinel-1 GRD item", "VV raster", "VH raster", "Calibration/noise/product schemas"],
+    "accessPoints": [
+      {"label":"Tbilisi Sentinel-1 search","url":"https://stac.dataspace.copernicus.eu/v1/search?bbox=44.70,41.67,44.88,41.80&collections=sentinel-1-grd&datetime=2026-07-01T00:00:00Z/2026-07-22T23:59:59Z&limit=2","method":"GET","format":"GeoJSON/STAC JSON","authentication":"None for catalog"},
+      {"label":"Collection metadata","url":"https://stac.dataspace.copernicus.eu/v1/collections/sentinel-1-grd","method":"GET","format":"STAC Collection JSON","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"Sentinel-1 STAC Item","description":"Radar acquisition metadata and assets.","fields":[
+        {"field":"id / collection / bbox / geometry","type":"string / string / bbox / GeoJSON Polygon","nullable":"No","example":"S1C_IW_GRDH…_COG / sentinel-1-grd / scene footprint","meaning":"Product identity and spatial coverage","freshness":"reference"},
+        {"field":"properties.datetime / start_datetime / end_datetime","type":"ISO datetime","nullable":"No","example":"2026-07-22T03:07:46.092165Z to 03:08:11.090870Z","meaning":"Radar acquisition interval","freshness":"reference"},
+        {"field":"properties.created / published / updated / processing:datetime","type":"ISO datetime","nullable":"No","example":"2026-07-22T05:17:46.912930Z","meaning":"Ingestion, processing and publication times","freshness":"reference"},
+        {"field":"properties.platform / constellation / instruments[]","type":"string / string / array","nullable":"No","example":"sentinel-1c / sentinel-1 / [sar]","meaning":"Spacecraft, mission and sensor","freshness":"reference"},
+        {"field":"properties.product:type / processing:level / processing:version","type":"string","nullable":"No","example":"IW_GRDH_1S / L1 / 01.00","meaning":"Radar product and processing level","freshness":"reference"},
+        {"field":"properties.sar:polarizations[]","type":"array<enum>","nullable":"No","example":"[VV,VH]","meaning":"Available co- and cross-polarized measurements","freshness":"reference"},
+        {"field":"properties.sar:frequency_band / sar:center_frequency","type":"string / GHz number","nullable":"No","example":"C / 5.405","meaning":"Radar frequency band and center frequency","freshness":"reference"},
+        {"field":"properties.sar:instrument_mode","type":"enum","nullable":"No","example":"IW","meaning":"Interferometric Wide swath mode","freshness":"reference"},
+        {"field":"properties.sar:pixel_spacing_range / sar:pixel_spacing_azimuth","type":"metre numbers","nullable":"No","example":"10 / 10","meaning":"Ground-range and along-track pixel spacing","freshness":"reference"},
+        {"field":"properties.sar:observation_direction / view:incidence_angle / view:azimuth","type":"string / degree numbers","nullable":"No","example":"right / 39.147 / 193.610","meaning":"Radar viewing geometry","freshness":"reference"},
+        {"field":"properties.sat:absolute_orbit / sat:relative_orbit / sat:orbit_cycle / sat:orbit_state","type":"integers / enum","nullable":"No","example":"8650 / 152 / 53 / descending","meaning":"Orbit metadata","freshness":"reference"},
+        {"field":"properties.product:timeliness / product:timeliness_category","type":"string","nullable":"No","example":"PT24H / Fast-24h","meaning":"Delivery class","freshness":"reference"},
+        {"field":"properties._private.product_name / product_size / product_uuid","type":"string / integer / UUID","nullable":"No","example":"SAFE name / 1159985627 / UUID","meaning":"Product download identity and byte size","freshness":"reference"},
+        {"field":"assets","type":"object","nullable":"No","example":"vv, vh, calibration/noise/product schemas, SAFE manifest, Product, thumbnail","meaning":"Radar data and supporting metadata files","freshness":"reference"}
+      ]},
+      {"name":"Radar asset families","description":"All asset names returned in the validated item.","fields":[
+        {"field":"vv / vh","type":"raster assets","nullable":"No","example":"measurement TIFFs","meaning":"Vertical-vertical and vertical-horizontal backscatter measurements","freshness":"reference"},
+        {"field":"schema-calibration-vv/vh","type":"XML assets","nullable":"No","example":"calibration annotation","meaning":"Radiometric calibration metadata","freshness":"reference"},
+        {"field":"schema-noise-vv/vh","type":"XML assets","nullable":"No","example":"noise annotation","meaning":"Thermal-noise metadata","freshness":"reference"},
+        {"field":"schema-product-vv/vh","type":"XML assets","nullable":"No","example":"product annotation","meaning":"Per-polarization product metadata","freshness":"reference"},
+        {"field":"Product / safe_manifest / thumbnail","type":"ZIP / XML / JPEG assets","nullable":"No","example":"full SAFE archive and overview","meaning":"Whole product, manifest and quicklook","freshness":"reference"}
+      ]}
+    ],
+    "samples": [{"label":"Same-day Tbilisi-intersecting radar scene","retrievedAt":"2026-07-22 14:03 Asia/Tbilisi","format":"JSON","value":"{\"id\":\"S1C_IW_GRDH_1SDV_20260722T030746_20260722T030811_008650_01123C_500E_COG\",\"properties\":{\"start_datetime\":\"2026-07-22T03:07:46.092165Z\",\"published\":\"2026-07-22T05:17:46.912930Z\",\"platform\":\"sentinel-1c\",\"sar:polarizations\":[\"VV\",\"VH\"],\"sar:instrument_mode\":\"IW\",\"sar:pixel_spacing_range\":10,\"view:incidence_angle\":39.1472,\"sat:relative_orbit\":152},\"assetKeys\":[\"vv\",\"vh\",\"thumbnail\"]}"}],
+    "caveats": ["Raster downloads require CDSE credentials", "GRD amplitude/backscatter is not a ready-made flood or damage label", "Terrain, incidence angle, speckle and calibration affect comparisons", "Pixel spacing is not equivalent to independent spatial resolution"],
+    "reliability": ["Same-day scene and processing timestamps were present", "Cloud-independent SAR complements optical Sentinel-2", "Calibration and noise metadata are supplied alongside measurements"],
+    "citations": [
+      {"label":"CDSE Sentinel-1 GRD collection","url":"https://stac.dataspace.copernicus.eu/v1/collections/sentinel-1-grd","type":"Primary"},
+      {"label":"CDSE STAC documentation","url":"https://documentation.dataspace.copernicus.eu/APIs/STAC.html","type":"Documentation"},
+      {"label":"Sentinel data legal notice","url":"https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice","type":"Documentation"}
+    ]
+  },
+  {
+    "slug": "planetary-computer-modis-vegetation-tbilisi",
+    "name": "MODIS 16-day vegetation indices over Tbilisi",
+    "shortName": "MODIS NDVI/EVI",
+    "category": "Earth observation",
+    "subcategory": "Vegetation condition",
+    "executiveSummary": "Microsoft Planetary Computer hosts NASA MOD13Q1 Collection 6.1 as STAC items and signed cloud-optimized GeoTIFF assets. The Tbilisi tile supplies 250-metre 16-day NDVI, EVI, red/NIR/blue/MIR reflectance, viewing and solar angles, composite day, a packed VI-quality layer and a four-class pixel-reliability layer. Metadata search and short-lived SAS signing are public, but the collection itself declares license=proprietary and attributes NASA LP DAAC as licensor.",
+    "provider": "NASA LP DAAC at USGS EROS; hosted and processed by Microsoft Planetary Computer",
+    "sourceKind": "Third-party aggregation",
+    "geography": "Global sinusoidal MODIS grid; validated tile h21v04 intersects Tbilisi",
+    "freshness": "Periodic",
+    "updateCadence": "16-day composites from 2000-02-18 onward; tested overlapping composite covered 2026-05-25 through 2026-06-09",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 14:04 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated STAC search. Asset URLs must be signed through the public Planetary Computer SAS endpoint; signed URLs are temporary. The signed TIF URL returned HTTP 200 during validation.",
+    "license": "STAC collection declares proprietary; NASA LP DAAC is listed as producer/licensor/processor. Follow LP DAAC product citation and Planetary Computer terms rather than assuming public-domain status.",
+    "recordCount": "1 Tbilisi-intersecting item returned for the tested 2026-06-01 to 2026-07-22 interval",
+    "keyEntities": ["MOD13Q1 STAC item", "NDVI raster", "EVI raster", "Reflectance rasters", "VI quality", "Pixel reliability"],
+    "accessPoints": [
+      {"label":"Tbilisi MOD13Q1 search","url":"https://planetarycomputer.microsoft.com/api/stac/v1/search?bbox=44.70,41.67,44.88,41.80&collections=modis-13Q1-061&datetime=2026-06-01T00:00:00Z/2026-07-22T23:59:59Z&limit=2","method":"GET","format":"GeoJSON/STAC JSON","authentication":"None"},
+      {"label":"Collection metadata","url":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-13Q1-061","method":"GET","format":"STAC Collection JSON","authentication":"None"},
+      {"label":"Asset signer","url":"https://planetarycomputer.microsoft.com/api/sas/v1/sign?href={assetHref}","method":"GET","format":"JSON","authentication":"None","notes":"Returns temporary signed href"}
+    ],
+    "schemas": [
+      {"name":"MOD13Q1 STAC Item","description":"Composite identity, interval and tile metadata.","fields":[
+        {"field":"id / collection / bbox / geometry","type":"string / string / bbox / polygon","nullable":"No","example":"MOD13Q1.A2026145.h21v04.061.2026163134454 / modis-13Q1-061","meaning":"Composite identity and coverage","freshness":"reference"},
+        {"field":"properties.datetime","type":"null","nullable":"Yes","example":"null","meaning":"Single instant is unused because item has an interval","freshness":"reference"},
+        {"field":"properties.start_datetime / end_datetime","type":"ISO datetime","nullable":"No","example":"2026-05-25T00:00:00Z / 2026-06-09T23:59:59Z","meaning":"16-day composite interval","freshness":"reference"},
+        {"field":"properties.platform / instruments[]","type":"string / array","nullable":"No","example":"terra / [modis]","meaning":"Satellite platform and sensor","freshness":"reference"},
+        {"field":"properties.modis:tile-id / horizontal-tile / vertical-tile","type":"string / integers","nullable":"No","example":"51021004 / 21 / 4","meaning":"MODIS sinusoidal tile identity","freshness":"reference"},
+        {"field":"properties.eo:cloud_cover","type":"percentage number","nullable":"No","example":"0","meaning":"Catalog cloud-cover metadata","freshness":"derived"},
+        {"field":"assets","type":"object","nullable":"No","example":"15 asset keys","meaning":"COG measurements, HDF source, preview and tile service","freshness":"reference"}
+      ]},
+      {"name":"Vegetation and supporting raster assets","description":"Each COG has href, TIFF media type, data role, title and raster:bands metadata.","fields":[
+        {"field":"250m_16_days_NDVI","type":"int16 COG; scale 0.0001; 250m","nullable":"No","example":"stored 7234 → NDVI 0.7234","meaning":"Normalized Difference Vegetation Index","freshness":"historical"},
+        {"field":"250m_16_days_EVI","type":"int16 COG; scale 0.0001; 250m","nullable":"No","example":"EVI raster","meaning":"Enhanced Vegetation Index","freshness":"historical"},
+        {"field":"250m_16_days_red_reflectance / NIR_reflectance / blue_reflectance / MIR_reflectance","type":"COG rasters","nullable":"No","example":"four reflectance assets","meaning":"Surface reflectance inputs and context bands","freshness":"historical"},
+        {"field":"250m_16_days_VI_Quality","type":"uint16 COG; 250m","nullable":"No","example":"packed quality bits","meaning":"Detailed vegetation-index QA flags","freshness":"reference"},
+        {"field":"250m_16_days_pixel_reliability","type":"int8 COG; 250m","nullable":"No","example":"0","meaning":"Simplified pixel reliability","freshness":"reference","notes":"0 good; 1 marginal; 2 snow/ice; 3 cloudy"},
+        {"field":"250m_16_days_composite_day_of_the_year","type":"COG raster","nullable":"No","example":"day-of-year values","meaning":"Observation date selected within composite","freshness":"historical"},
+        {"field":"250m_16_days_relative_azimuth_angle / sun_zenith_angle / view_zenith_angle","type":"COG rasters","nullable":"No","example":"angle layers","meaning":"Acquisition/view geometry","freshness":"reference"},
+        {"field":"hdf / rendered_preview / tilejson","type":"HDF / image / JSON assets","nullable":"No","example":"source product and visualization helpers","meaning":"Original product, preview and tiled rendering metadata","freshness":"reference"},
+        {"field":"common asset metadata","type":"href,type,roles,title,raster:bands[]","nullable":"No","example":"COG URL; scale; data_type; spatial_resolution","meaning":"Download and pixel-decoding metadata","freshness":"reference"}
+      ]}
+    ],
+    "samples": [{"label":"Tbilisi MODIS vegetation composite","retrievedAt":"2026-07-22 14:04 Asia/Tbilisi","format":"JSON","value":"{\"id\":\"MOD13Q1.A2026145.h21v04.061.2026163134454\",\"properties\":{\"start_datetime\":\"2026-05-25T00:00:00Z\",\"end_datetime\":\"2026-06-09T23:59:59Z\",\"platform\":\"terra\",\"modis:horizontal-tile\":21,\"modis:vertical-tile\":4},\"NDVI\":{\"title\":\"16 day NDVI\",\"scale\":0.0001,\"data_type\":\"int16\",\"spatial_resolution\":250},\"pixelReliabilityClasses\":{\"0\":\"good\",\"1\":\"marginal\",\"2\":\"snow/ice\",\"3\":\"cloudy\"}}"}],
+    "caveats": ["Apply scale 0.0001 to NDVI/EVI stored integers", "Use QA and pixel-reliability layers; do not compare cloudy/snow pixels as vegetation change", "250m pixels mix multiple urban surfaces", "Temporary SAS signatures expire", "Collection explicitly says proprietary"],
+    "reliability": ["Live search returned h21v04 for the Tbilisi bbox", "A signed asset URL returned HTTP 200", "Temporal extent starts in 2000, supporting long comparisons"],
+    "citations": [
+      {"label":"Planetary Computer MOD13Q1 collection","url":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-13Q1-061","type":"Primary"},
+      {"label":"NASA MOD13Q1 product page","url":"https://lpdaac.usgs.gov/products/mod13q1v061/","type":"Documentation"},
+      {"label":"Planetary Computer data-license guidance","url":"https://planetarycomputer.microsoft.com/docs/overview/about/#data-licenses","type":"Documentation"}
+    ]
+  },
+  {
+    "slug": "planetary-computer-modis-lst-tbilisi",
+    "name": "MODIS daily land-surface temperature over Tbilisi",
+    "shortName": "MODIS LST",
+    "category": "Earth observation",
+    "subcategory": "Land-surface temperature and emissivity",
+    "executiveSummary": "Planetary Computer exposes NASA MOD11A1 Collection 6.1 daily tiles covering Tbilisi. Each item includes 1-km daytime and nighttime land-surface temperature, observation times and view angles, emissivity bands 31/32, clear-sky coverage and separate quality-control rasters. This measures modeled/retrieved surface skin temperature—not 2-metre air temperature—and cloudy pixels are often missing or low quality.",
+    "provider": "NASA LP DAAC at USGS EROS; hosted by Microsoft Planetary Computer",
+    "sourceKind": "Third-party aggregation",
+    "geography": "Global MODIS grid; h21v04 includes Tbilisi",
+    "freshness": "Daily",
+    "updateCadence": "Daily from 2000-02-24 onward; tested item covered 2026-07-17",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 14:04 Asia/Tbilisi",
+    "accessSummary": "Public STAC metadata and public SAS-signing service for temporary COG access.",
+    "license": "STAC collection declares proprietary; NASA LP DAAC is the listed licensor",
+    "recordCount": "2 items returned with limit=2; tested first item was 2026-07-17 with catalog cloud cover 39%",
+    "keyEntities": ["Daily MOD11A1 item", "Day LST", "Night LST", "Emissivity", "Observation time", "Quality control"],
+    "accessPoints": [
+      {"label":"Tbilisi MOD11A1 search","url":"https://planetarycomputer.microsoft.com/api/stac/v1/search?bbox=44.70,41.67,44.88,41.80&collections=modis-11A1-061&datetime=2026-06-01T00:00:00Z/2026-07-22T23:59:59Z&limit=2","method":"GET","format":"GeoJSON/STAC JSON","authentication":"None"},
+      {"label":"Collection metadata","url":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-11A1-061","method":"GET","format":"STAC Collection JSON","authentication":"None"},
+      {"label":"Asset signer","url":"https://planetarycomputer.microsoft.com/api/sas/v1/sign?href={assetHref}","method":"GET","format":"JSON","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"MOD11A1 item","description":"Daily tile identity and interval.","fields":[
+        {"field":"id / collection / bbox / geometry","type":"string / string / bbox / polygon","nullable":"No","example":"MOD11A1.A2026198.h21v04.061.2026199234220","meaning":"Product identity and spatial coverage","freshness":"reference"},
+        {"field":"properties.datetime","type":"null","nullable":"Yes","example":"null","meaning":"Interval item has no single datetime","freshness":"reference"},
+        {"field":"properties.start_datetime / end_datetime","type":"ISO datetime","nullable":"No","example":"2026-07-17T00:00:00Z / 2026-07-17T23:59:59Z","meaning":"Daily observation window","freshness":"historical"},
+        {"field":"properties.platform / instruments[]","type":"string / array","nullable":"No","example":"terra / [modis]","meaning":"Satellite and sensor","freshness":"reference"},
+        {"field":"properties.modis:tile-id / horizontal-tile / vertical-tile","type":"string / integers","nullable":"No","example":"51021004 / 21 / 4","meaning":"MODIS tile identity","freshness":"reference"},
+        {"field":"properties.eo:cloud_cover","type":"percentage","nullable":"No","example":"39","meaning":"Catalog cloud-cover metadata","freshness":"derived"}
+      ]},
+      {"name":"MOD11A1 assets","description":"Daily temperature, emissivity, time, view and QA COGs.","fields":[
+        {"field":"LST_Day_1km / LST_Night_1km","type":"uint16 COG; scale 0.02 Kelvin; 1000m","nullable":"No","example":"stored 15000 → 300 K","meaning":"Daytime and nighttime surface temperature","freshness":"historical"},
+        {"field":"QC_Day / QC_Night","type":"uint8 COG; 1000m","nullable":"No","example":"packed QA bits","meaning":"Mandatory quality, data-quality, emissivity-error and LST-error flags","freshness":"reference"},
+        {"field":"Day_view_time / Night_view_time","type":"COG rasters","nullable":"No","example":"local observation time layer","meaning":"Per-pixel observation time","freshness":"historical"},
+        {"field":"Day_view_angl / Night_view_angl","type":"COG rasters","nullable":"No","example":"view-angle layer","meaning":"Sensor view angle","freshness":"reference"},
+        {"field":"Emis_31 / Emis_32","type":"COG rasters","nullable":"No","example":"emissivity bands","meaning":"Surface emissivity for MODIS thermal bands 31 and 32","freshness":"historical"},
+        {"field":"Clear_day_cov / Clear_night_cov","type":"COG rasters","nullable":"No","example":"clear-sky coverage","meaning":"Clear-sky observation coverage","freshness":"historical"},
+        {"field":"hdf / rendered_preview / tilejson","type":"HDF / image / JSON","nullable":"No","example":"supporting assets","meaning":"Original product and visualization helpers","freshness":"reference"}
+      ]}
+    ],
+    "samples": [{"label":"Tbilisi MODIS daily LST item","retrievedAt":"2026-07-22 14:04 Asia/Tbilisi","format":"JSON","value":"{\"id\":\"MOD11A1.A2026198.h21v04.061.2026199234220\",\"properties\":{\"start_datetime\":\"2026-07-17T00:00:00Z\",\"end_datetime\":\"2026-07-17T23:59:59Z\",\"eo:cloud_cover\":39},\"LST_Day_1km\":{\"unit\":\"Kelvin\",\"scale\":0.02,\"data_type\":\"uint16\",\"spatial_resolution\":1000},\"assetKeys\":[\"LST_Day_1km\",\"LST_Night_1km\",\"QC_Day\",\"QC_Night\",\"Emis_31\",\"Emis_32\"]}"}],
+    "caveats": ["Land-surface temperature is not air temperature", "Apply the 0.02 Kelvin scale", "Clouds create missing/invalid pixels; QA is mandatory", "One-kilometre pixels are coarse within Tbilisi", "Collection declares proprietary and signed URLs expire"],
+    "reliability": ["Current daily item for the local MODIS tile was returned", "Day/night, view-time and QC layers make observations auditable", "Archive extends to 2000"],
+    "citations": [
+      {"label":"Planetary Computer MOD11A1 collection","url":"https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-11A1-061","type":"Primary"},
+      {"label":"NASA MOD11A1 product page","url":"https://lpdaac.usgs.gov/products/mod11a1v061/","type":"Documentation"}
+    ]
+  },
+  {
+    "slug": "nasa-firms-viirs-active-fires-georgia",
+    "name": "NASA FIRMS VIIRS near-real-time active-fire detections in Georgia",
+    "shortName": "FIRMS active fires",
+    "category": "Hazards",
+    "subcategory": "Satellite active-fire detections",
+    "executiveSummary": "NASA FIRMS publishes a rolling global 24-hour CSV of VIIRS thermal-anomaly detections that can be filtered to Georgia without credentials. The current file contained 26 detections in the broad Georgia bbox. Each point includes acquisition date/time, satellite, VIIRS brightness temperatures, fire radiative power, confidence, day/night flag and pixel footprint dimensions. A detection is a thermal anomaly at satellite-pixel scale, not a confirmed wildfire perimeter or damage report.",
+    "provider": "NASA LANCE / EOSDIS Fire Information for Resource Management System",
+    "sourceKind": "Official download",
+    "geography": "Global; 26 points in bbox 39.5–46.8E, 40.8–43.6N at validation",
+    "freshness": "Near real-time",
+    "updateCadence": "Rolling 24-hour global file; FIRMS NRT latency varies by satellite processing and downlink",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:56 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated 6.1 MB CSV download. FIRMS area API and archives require a free MAP_KEY, but the current global 24-hour CSV did not.",
+    "license": "NASA Earth science data are openly available; retain NASA/FIRMS source acknowledgement and product citation. FIRMS warns against interpreting NRT data as authoritative incident confirmation.",
+    "recordCount": "26 rows in the broad Georgia bbox from the current global 24-hour file",
+    "keyEntities": ["VIIRS thermal anomaly point"],
+    "accessPoints": [
+      {"label":"VIIRS SNPP global 24-hour CSV","url":"https://firms.modaps.eosdis.nasa.gov/data/active_fire/suomi-npp-viirs-c2/csv/SUOMI_VIIRS_C2_Global_24h.csv","method":"GET","format":"CSV","authentication":"None"},
+      {"label":"FIRMS API documentation","url":"https://firms.modaps.eosdis.nasa.gov/api/","method":"GET","format":"HTML documentation","authentication":"MAP_KEY required for area API"}
+    ],
+    "schemas": [{"name":"VIIRS active-fire CSV row","description":"One satellite thermal-anomaly detection.","fields":[
+      {"field":"latitude / longitude","type":"decimal degrees","nullable":"No","example":"41.522 / 46.13354","meaning":"Detection pixel center in WGS84","freshness":"live"},
+      {"field":"bright_ti4","type":"Kelvin number","nullable":"No","example":"356.1","meaning":"VIIRS I-4 brightness temperature","freshness":"live"},
+      {"field":"scan / track","type":"kilometre numbers","nullable":"No","example":"0.46 / 0.47","meaning":"Approximate pixel footprint dimensions across and along scan","freshness":"reference"},
+      {"field":"acq_date / acq_time","type":"YYYY-MM-DD / HHMM UTC","nullable":"No","example":"2026-07-21 / 0926","meaning":"Satellite acquisition date and time","freshness":"live"},
+      {"field":"satellite","type":"code string","nullable":"No","example":"N","meaning":"Observing satellite/platform code","freshness":"reference"},
+      {"field":"confidence","type":"enum string","nullable":"No","example":"nominal","meaning":"Detection confidence category","freshness":"live"},
+      {"field":"version","type":"string","nullable":"No","example":"2.0NRT","meaning":"Algorithm/product version and NRT status","freshness":"reference"},
+      {"field":"bright_ti5","type":"Kelvin number","nullable":"No","example":"297.58","meaning":"VIIRS I-5 brightness temperature","freshness":"live"},
+      {"field":"frp","type":"MW number","nullable":"No","example":"10.45","meaning":"Fire radiative power estimate","freshness":"live"},
+      {"field":"daynight","type":"D/N code","nullable":"No","example":"D","meaning":"Day or night acquisition","freshness":"reference"}
+    ]}],
+    "samples": [{"label":"Georgia-bbox VIIRS detection","retrievedAt":"2026-07-22 13:56 Asia/Tbilisi","format":"CSV","value":"latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,confidence,version,bright_ti5,frp,daynight\n41.522,46.13354,356.1,0.46,0.47,2026-07-21,0926,N,nominal,2.0NRT,297.58,10.45,D"}],
+    "caveats": ["Broad bbox includes border-adjacent parts of neighboring countries; apply a Georgia polygon for country-only results", "Point is a hot pixel, not a fire perimeter", "Cloud, smoke, scan gaps and revisit timing cause omissions", "Agricultural/industrial heat can produce detections", "NRT records can later be reprocessed"],
+    "reliability": ["The live global file was downloaded and parsed", "All 13 columns were present", "Acquisition time, confidence and FRP enable freshness and significance checks"],
+    "citations": [
+      {"label":"NASA FIRMS active-fire data","url":"https://firms.modaps.eosdis.nasa.gov/active_fire/","type":"Primary"},
+      {"label":"FIRMS API documentation","url":"https://firms.modaps.eosdis.nasa.gov/api/","type":"Documentation"},
+      {"label":"FIRMS data citations","url":"https://firms.modaps.eosdis.nasa.gov/content/acknowledgements","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "open-meteo-tbilisi-weather-history-elevation",
+    "name": "Open-Meteo Tbilisi weather, historical reanalysis and elevation",
+    "shortName": "Open-Meteo weather",
+    "category": "Weather and climate",
+    "subcategory": "Forecast, history and terrain elevation",
+    "executiveSummary": "Open-Meteo provides unauthenticated point APIs for current conditions and forecast arrays, historical model/reanalysis time series, and terrain elevation at Tbilisi coordinates. The tested response included temperature, humidity, precipitation, WMO weather codes, pressure, wind, visibility, shallow-soil temperature/moisture and daily summaries. Coordinates are snapped to the provider's model grid, so this is gridded model data rather than a physical weather-station observation.",
+    "provider": "Open-Meteo",
+    "sourceKind": "Official documented API",
+    "geography": "Global point/grid APIs; tested at 41.7151,44.8271 in Tbilisi",
+    "freshness": "Near real-time",
+    "updateCadence": "Forecast models refresh multiple times daily; archive updates depend on selected reanalysis/model; elevation is static",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:45 Asia/Tbilisi",
+    "accessSummary": "No key for non-commercial use under published fair-use limits. Commercial use and higher-volume service have separate customer terms. Variables are selected explicitly; response contains parallel value arrays and matching *_units objects.",
+    "license": "Open-Meteo API data are offered under CC BY 4.0 with attribution, subject to API terms and upstream model-source attribution",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "recordCount": "One current record, 72 hourly forecast values and 3 daily forecasts in the tested request; 72 hourly and 3 daily values in the historical request; one elevation value",
+    "keyEntities": ["Grid-point metadata", "Current weather", "Hourly series", "Daily series", "Units dictionary", "Elevation"],
+    "accessPoints": [
+      {"label":"Forecast API sample","url":"https://api.open-meteo.com/v1/forecast?latitude=41.7151&longitude=44.8271&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,rain,weather_code,visibility,wind_speed_10m,soil_temperature_0cm,soil_moisture_0_to_1cm&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=Asia/Tbilisi&forecast_days=3","method":"GET","format":"JSON","authentication":"None for open-access tier"},
+      {"label":"Historical API sample","url":"https://archive-api.open-meteo.com/v1/archive?latitude=41.7151&longitude=44.8271&start_date=2025-07-20&end_date=2025-07-22&daily=weather_code,temperature_2m_max,temperature_2m_min,temperature_2m_mean,precipitation_sum,wind_speed_10m_max&hourly=temperature_2m,relative_humidity_2m,precipitation,weather_code,soil_temperature_0_to_7cm&timezone=Asia/Tbilisi","method":"GET","format":"JSON","authentication":"None"},
+      {"label":"Elevation API sample","url":"https://api.open-meteo.com/v1/elevation?latitude=41.7151&longitude=44.8271","method":"GET","format":"JSON","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"Response metadata","description":"Shared grid and time context.","fields":[
+        {"field":"latitude / longitude","type":"numbers","nullable":"No","example":"41.6875 / 44.8125","meaning":"Model grid cell actually returned","freshness":"reference"},
+        {"field":"generationtime_ms","type":"number","nullable":"No","example":"0.3115","meaning":"Server generation time","freshness":"derived"},
+        {"field":"utc_offset_seconds / timezone / timezone_abbreviation","type":"integer / strings","nullable":"No","example":"14400 / Asia/Tbilisi / GMT+4","meaning":"Requested time-zone context","freshness":"reference"},
+        {"field":"elevation","type":"metres number","nullable":"No","example":"590","meaning":"Model-grid elevation","freshness":"reference"},
+        {"field":"*_units","type":"object","nullable":"No","example":"temperature_2m: °C","meaning":"Unit for each selected variable","freshness":"reference"}
+      ]},
+      {"name":"Current weather","description":"Current model value at response time.","fields":[
+        {"field":"time / interval","type":"local ISO datetime / seconds","nullable":"No","example":"2026-07-22T13:45 / 900","meaning":"Valid time and interval","freshness":"live"},
+        {"field":"temperature_2m / apparent_temperature","type":"°C numbers","nullable":"No","example":"31.5 / 34.7","meaning":"Air and apparent temperature","freshness":"live"},
+        {"field":"relative_humidity_2m / cloud_cover","type":"percentage numbers","nullable":"No","example":"41 / 16","meaning":"Humidity and cloud cover","freshness":"live"},
+        {"field":"precipitation / rain","type":"mm numbers","nullable":"No","example":"0 / 0","meaning":"Total precipitation and rain over interval","freshness":"live"},
+        {"field":"weather_code / is_day","type":"WMO integer / 0-1","nullable":"No","example":"1 / 1","meaning":"Weather condition code and daylight flag","freshness":"live"},
+        {"field":"pressure_msl / surface_pressure","type":"hPa numbers","nullable":"No","example":"1009.4 / 945.2","meaning":"Sea-level and surface pressure","freshness":"live"},
+        {"field":"wind_speed_10m / wind_direction_10m / wind_gusts_10m","type":"km/h / degrees / km/h","nullable":"No","example":"7.5 / 145 / 17.3","meaning":"Wind at 10 metres","freshness":"live"}
+      ]},
+      {"name":"Hourly and daily selected arrays","description":"Parallel arrays aligned by time.","fields":[
+        {"field":"hourly.time","type":"array<local ISO datetime>","nullable":"No","example":"72 timestamps","meaning":"Hourly time axis","freshness":"derived"},
+        {"field":"hourly.temperature_2m / precipitation_probability / precipitation / rain","type":"number arrays","nullable":"No","example":"22.9°C / 0% / 0mm / 0mm","meaning":"Hourly temperature and precipitation forecast","freshness":"derived"},
+        {"field":"hourly.weather_code / visibility / wind_speed_10m","type":"integer / metre / km/h arrays","nullable":"No","example":"2 / 35540 / 5.7","meaning":"Hourly condition, visibility and wind","freshness":"derived"},
+        {"field":"hourly.soil_temperature_0cm / soil_moisture_0_to_1cm","type":"°C / m³m⁻³ arrays","nullable":"No","example":"22 / 0.211","meaning":"Shallow modeled soil conditions","freshness":"derived"},
+        {"field":"daily.time / weather_code","type":"date / integer arrays","nullable":"No","example":"2026-07-24 / 63","meaning":"Daily axis and dominant condition","freshness":"derived"},
+        {"field":"daily.temperature_2m_max / temperature_2m_min / precipitation_sum / wind_speed_10m_max","type":"number arrays","nullable":"No","example":"30.1 / 20 / 10.4 / 20.9","meaning":"Daily temperature, precipitation and wind summaries","freshness":"derived"},
+        {"field":"historical hourly soil_temperature_0_to_7cm and relative_humidity_2m","type":"number arrays","nullable":"No","example":"selected historical variables","meaning":"Archived model/reanalysis series","freshness":"historical"},
+        {"field":"historical daily temperature_2m_mean","type":"°C array","nullable":"No","example":"daily mean","meaning":"Historical daily mean temperature","freshness":"historical"}
+      ]},
+      {"name":"Elevation response","description":"Terrain lookup for one or multiple coordinates.","fields":[
+        {"field":"elevation[]","type":"array<number metres>","nullable":"No","example":"[590.0]","meaning":"Elevation for each requested coordinate","freshness":"reference"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Current Tbilisi grid value","retrievedAt":"2026-07-22 13:45 Asia/Tbilisi","format":"JSON","value":"{\"latitude\":41.6875,\"longitude\":44.8125,\"elevation\":590,\"current\":{\"time\":\"2026-07-22T13:45\",\"temperature_2m\":31.5,\"relative_humidity_2m\":41,\"weather_code\":1,\"pressure_msl\":1009.4,\"wind_speed_10m\":7.5}}"},
+      {"label":"Elevation lookup","retrievedAt":"2026-07-22 13:45 Asia/Tbilisi","format":"JSON","value":"{\"elevation\":[590.0]}"}
+    ],
+    "caveats": ["Model grid coordinates differ from the requested coordinate", "Forecast and archive values are not station observations", "Different historical models and resolutions can yield discontinuities", "Soil values are modeled", "Attribution and fair-use limits apply"],
+    "reliability": ["Forecast, archive and elevation endpoints all returned HTTP 200 JSON", "Every numeric array has an explicit units dictionary", "Requested timezone was honored"],
+    "citations": [
+      {"label":"Open-Meteo weather API","url":"https://open-meteo.com/en/docs","type":"Documentation"},
+      {"label":"Historical weather API","url":"https://open-meteo.com/en/docs/historical-weather-api","type":"Documentation"},
+      {"label":"Elevation API","url":"https://open-meteo.com/en/docs/elevation-api","type":"Documentation"},
+      {"label":"Open-Meteo terms","url":"https://open-meteo.com/en/terms","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "open-meteo-flood-tbilisi",
+    "name": "Open-Meteo GloFAS river-discharge series near Tbilisi",
+    "shortName": "Tbilisi flood API",
+    "category": "Hazards",
+    "subcategory": "Modeled river discharge",
+    "executiveSummary": "Open-Meteo's Flood API exposes daily river-discharge forecasts and ensemble statistics derived from the European Commission's GloFAS model at a coordinate near Tbilisi. The tested query returned past and forecast daily discharge, mean, minimum, maximum, median and 25th/75th percentiles in cubic metres per second. It is model-grid output, not a gauge measurement or official flood warning; the very small tested values make reach selection and river-network alignment especially important.",
+    "provider": "Open-Meteo using Copernicus Emergency Management Service GloFAS data",
+    "sourceKind": "Third-party aggregation",
+    "geography": "Global river model grid; tested near central Tbilisi",
+    "freshness": "Daily",
+    "updateCadence": "Daily model updates; request combined five past and five forecast days",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:45 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated HTTPS JSON for open-access use. Point is snapped to a model cell and returned in GMT.",
+    "license": "CC BY 4.0 attribution to Open-Meteo plus underlying Copernicus/GloFAS acknowledgement and Open-Meteo terms",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "recordCount": "10 daily values in the tested past/forecast window",
+    "keyEntities": ["Model-grid metadata", "Daily river-discharge ensemble series"],
+    "accessPoints": [{"label":"Tbilisi flood query","url":"https://flood-api.open-meteo.com/v1/flood?latitude=41.7151&longitude=44.8271&daily=river_discharge,river_discharge_mean,river_discharge_max,river_discharge_min,river_discharge_median,river_discharge_p25,river_discharge_p75&past_days=5&forecast_days=5","method":"GET","format":"JSON","authentication":"None"}],
+    "schemas": [
+      {"name":"Flood response metadata","description":"Returned model-cell context.","fields":[
+        {"field":"latitude / longitude / elevation","type":"numbers","nullable":"No","example":"41.725006 / 44.825012 / 590","meaning":"Selected model-grid coordinate and elevation","freshness":"reference"},
+        {"field":"generationtime_ms","type":"number","nullable":"No","example":"1.6794","meaning":"Server computation time","freshness":"derived"},
+        {"field":"utc_offset_seconds / timezone / timezone_abbreviation","type":"integer / strings","nullable":"No","example":"0 / GMT / GMT","meaning":"Time context","freshness":"reference"},
+        {"field":"daily_units","type":"object","nullable":"No","example":"all discharge variables: m³/s","meaning":"Units dictionary","freshness":"reference"}
+      ]},
+      {"name":"Daily river-discharge arrays","description":"All arrays align to daily.time.","fields":[
+        {"field":"daily.time","type":"array<date>","nullable":"No","example":"2026-07-17…2026-07-26","meaning":"Past and forecast date axis","freshness":"derived"},
+        {"field":"daily.river_discharge","type":"array<m³/s>","nullable":"No","example":"[0.05,0.03,0.02,0.16,0.20,0.02,…]","meaning":"Primary daily modeled discharge","freshness":"derived"},
+        {"field":"daily.river_discharge_mean / median","type":"arrays<m³/s>","nullable":"No","example":"0.21 / 0.20 for 2026-07-21","meaning":"Ensemble central tendency","freshness":"derived"},
+        {"field":"daily.river_discharge_min / max","type":"arrays<m³/s>","nullable":"No","example":"0.19 / 0.36","meaning":"Ensemble range","freshness":"derived"},
+        {"field":"daily.river_discharge_p25 / p75","type":"arrays<m³/s>","nullable":"No","example":"0.20 / 0.21","meaning":"25th and 75th percentiles","freshness":"derived"}
+      ]}
+    ],
+    "samples": [{"label":"Tbilisi-near grid discharge","retrievedAt":"2026-07-22 13:45 Asia/Tbilisi","format":"JSON","value":"{\"latitude\":41.725006,\"longitude\":44.825012,\"daily_units\":{\"river_discharge\":\"m³/s\"},\"daily\":{\"time\":[\"2026-07-21\",\"2026-07-22\",\"2026-07-23\"],\"river_discharge\":[0.2,0.02,0.02],\"river_discharge_mean\":[0.21,0.02,0.01],\"river_discharge_max\":[0.36,0.03,0.03]}}"}],
+    "caveats": ["Not an official warning or gauge observation", "Nearest model cell may map to a minor reach rather than the desired Mtkvari segment", "Zero or tiny flow can indicate poor reach selection or grid limitations", "Use river geometry and local gauge/warning context before interpretation"],
+    "reliability": ["Endpoint returned complete past and forecast arrays", "Ensemble percentiles expose uncertainty", "Returned grid coordinate is explicit"],
+    "citations": [
+      {"label":"Open-Meteo Flood API","url":"https://open-meteo.com/en/docs/flood-api","type":"Documentation"},
+      {"label":"GloFAS service","url":"https://global-flood.emergency.copernicus.eu/","type":"Context"},
+      {"label":"Open-Meteo terms","url":"https://open-meteo.com/en/terms","type":"Documentation"}
+    ]
+  },
+  {
+    "slug": "usgs-earthquakes-georgia-bbox",
+    "name": "USGS earthquake events in and around Georgia",
+    "shortName": "USGS Georgia earthquakes",
+    "category": "Hazards",
+    "subcategory": "Earthquake events",
+    "executiveSummary": "The USGS FDSN Event Web Service returns GeoJSON earthquake events for a Georgia-area bounding box with origin and update times, magnitude, reviewed status, human-readable place, point geometry with depth, felt reports, intensity/alert values when available, network identifiers and quality metrics. A 2025-01-01 to 2026-07-22 query with magnitude at least 2 returned ten events, including a reviewed M4.1 event north-northwest of Tqibuli.",
+    "provider": "U.S. Geological Survey Earthquake Hazards Program",
+    "sourceKind": "Official documented API",
+    "geography": "Global; validated bbox 39.5–46.8E, 40.8–43.6N around Georgia",
+    "freshness": "Near real-time",
+    "updateCadence": "Event-driven; origins and products may be revised after initial publication",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:58 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated FDSN query supporting time, magnitude, bbox, radial and event-ID filters. GeoJSON returns max 20,000 events by default limits; paginate or narrow large searches.",
+    "license": "USGS-authored data are generally U.S. public domain unless otherwise noted; attribution is requested and embedded third-party products can have separate terms",
+    "recordCount": "10 events for the validated 18.5-month bbox query",
+    "keyEntities": ["GeoJSON FeatureCollection", "Earthquake feature", "Event properties", "Hypocenter point"],
+    "accessPoints": [
+      {"label":"Validated Georgia-bbox query","url":"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-01-01&endtime=2026-07-22&minlatitude=40.8&maxlatitude=43.6&minlongitude=39.5&maxlongitude=46.8&minmagnitude=2","method":"GET","format":"GeoJSON","authentication":"None"},
+      {"label":"FDSN Event API documentation","url":"https://earthquake.usgs.gov/fdsnws/event/1/","method":"GET","format":"HTML/Text documentation","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"FeatureCollection metadata","description":"Query context and result count.","fields":[
+        {"field":"type","type":"string","nullable":"No","example":"FeatureCollection","meaning":"GeoJSON type","freshness":"reference"},
+        {"field":"metadata.generated","type":"epoch milliseconds","nullable":"No","example":"1784714386000","meaning":"Response-generation time","freshness":"live"},
+        {"field":"metadata.url / title / status / api / count","type":"strings / integer","nullable":"No","example":"query URL / USGS Earthquakes / 200 / 2.7.0 / 10","meaning":"Query provenance and result metadata","freshness":"derived"},
+        {"field":"features[]","type":"array<GeoJSON Feature>","nullable":"No","example":"10 items","meaning":"Earthquake events","freshness":"live"}
+      ]},
+      {"name":"Earthquake feature","description":"All properties returned in the representative event.","fields":[
+        {"field":"id / properties.net / properties.code / properties.ids / properties.sources","type":"strings","nullable":"No","example":"us6000t7jf / us / 6000t7jf / ,us6000t7jf, / ,us,","meaning":"Event and contributing-network identifiers","freshness":"reference"},
+        {"field":"properties.mag / magType","type":"number / string","nullable":"No","example":"4.1 / mb","meaning":"Magnitude and magnitude scale","freshness":"live"},
+        {"field":"properties.place / title / type","type":"strings","nullable":"No","example":"21 km NNW of T’q’ibuli, Georgia / M 4.1… / earthquake","meaning":"Human location and event labels","freshness":"derived"},
+        {"field":"properties.time / updated","type":"epoch milliseconds","nullable":"No","example":"1782187674385 / 1784256708093","meaning":"Origin and last-update times","freshness":"live"},
+        {"field":"properties.url / detail","type":"URLs","nullable":"No","example":"event page / event GeoJSON endpoint","meaning":"Human and machine event details","freshness":"reference"},
+        {"field":"properties.felt / cdi / mmi / alert","type":"integer / numbers / string","nullable":"Yes","example":"1 / 3.4 / null / null","meaning":"Felt-report count, community intensity, instrumental intensity and PAGER alert","freshness":"live"},
+        {"field":"properties.status / tsunami / sig","type":"string / 0-1 / integer","nullable":"No","example":"reviewed / 0 / 259","meaning":"Review status, tsunami flag and significance score","freshness":"live"},
+        {"field":"properties.types","type":"comma-wrapped string list","nullable":"No","example":",dyfi,origin,phase-data,","meaning":"Associated product types","freshness":"reference"},
+        {"field":"properties.nst / dmin / rms / gap","type":"integer / numbers","nullable":"Yes","example":"30 / 0.772 / 1.06 / 64","meaning":"Station count, nearest-station distance, travel-time residual and azimuthal gap quality metrics","freshness":"live"},
+        {"field":"properties.tz","type":"number","nullable":"Yes","example":"null","meaning":"Legacy timezone offset field","freshness":"reference"},
+        {"field":"geometry.type / coordinates","type":"Point / [lon,lat,depthKm]","nullable":"No","example":"[42.8928,42.5207,15.784]","meaning":"Hypocenter longitude, latitude and depth in kilometres","freshness":"live"}
+      ]}
+    ],
+    "samples": [{"label":"Reviewed Georgia earthquake","retrievedAt":"2026-07-22 13:58 Asia/Tbilisi","format":"GeoJSON","value":"{\"type\":\"Feature\",\"id\":\"us6000t7jf\",\"properties\":{\"mag\":4.1,\"place\":\"21 km NNW of T’q’ibuli, Georgia\",\"time\":1782187674385,\"updated\":1784256708093,\"felt\":1,\"cdi\":3.4,\"status\":\"reviewed\",\"tsunami\":0,\"sig\":259,\"nst\":30,\"dmin\":0.772,\"rms\":1.06,\"gap\":64,\"magType\":\"mb\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[42.8928,42.5207,15.784]}}"}],
+    "caveats": ["BBox includes neighboring territory and Black Sea; country names are descriptive, not a polygon filter", "Preliminary events can move or change magnitude/status", "Null alert or MMI means unavailable, not zero", "USGS completeness for small local earthquakes differs from Georgia's national seismic network"],
+    "reliability": ["Query returned current generated timestamp and reviewed events", "Each event links to a detailed machine endpoint", "Quality metrics and update time support filtering"],
+    "citations": [
+      {"label":"USGS FDSN Event service","url":"https://earthquake.usgs.gov/fdsnws/event/1/","type":"Primary"},
+      {"label":"GeoJSON summary format","url":"https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php","type":"Documentation"},
+      {"label":"USGS copyright and credit","url":"https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "gdelt-doc-tbilisi-news",
+    "name": "GDELT global news mentions matching Tbilisi",
+    "shortName": "GDELT Tbilisi news",
+    "category": "Events and media",
+    "subcategory": "Global news metadata",
+    "executiveSummary": "GDELT DOC 2.0 can search worldwide monitored news for Tbilisi and return article-level metadata in JSON. A one-week query returned five representative articles in Chinese, English, Armenian and Russian, including Tbilisi flooding and a municipal demolition decision. Records contain URL, optional mobile URL and social image, title, first-seen timestamp, publisher domain, detected article language and source-country label. This is media-monitoring metadata, not verified event ground truth or a geocoded Tbilisi-event table.",
+    "provider": "The GDELT Project",
+    "sourceKind": "Open collaborative platform",
+    "geography": "Worldwide monitored news; validated text query for Tbilisi",
+    "freshness": "Near real-time",
+    "updateCadence": "Continuously updated global news index; DOC API rate limit requests to roughly one every five seconds",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 14:01 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated JSON API with query, mode, maximum records, timespan or explicit timestamps. First rapid request returned HTTP 429 with an instruction to limit calls to one every five seconds; a delayed retry returned JSON.",
+    "license": "GDELT data/metadata are provided for open use, but linked article text, titles and social images remain subject to publisher copyright and terms. Store links and metadata, not copied articles.",
+    "recordCount": "5 articles returned with maxrecords=5 for a one-week Tbilisi query",
+    "keyEntities": ["Article metadata record"],
+    "accessPoints": [
+      {"label":"Validated one-week query","url":"https://api.gdeltproject.org/api/v2/doc/doc?query=Tbilisi&mode=artlist&maxrecords=5&format=json&timespan=1week","method":"GET","format":"JSON","authentication":"None","notes":"Throttle to one request per five seconds"},
+      {"label":"DOC 2.0 API documentation","url":"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/","method":"GET","format":"HTML documentation","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"DOC response","description":"Article-list mode response.","fields":[
+        {"field":"articles[]","type":"array<object>","nullable":"No","example":"5 records","meaning":"Matching monitored articles","freshness":"live"}
+      ]},
+      {"name":"Article","description":"Every field returned in the validated article-list response.","fields":[
+        {"field":"url","type":"URL string","nullable":"No","example":"https://www.archdaily.com/…","meaning":"Canonical or monitored article URL","freshness":"reference"},
+        {"field":"url_mobile","type":"URL string","nullable":"Yes","example":"","meaning":"Mobile-version URL when discovered","freshness":"reference"},
+        {"field":"title","type":"string","nullable":"No","example":"Studio Fuksas Rike Park Cultural Complex Approved for Demolition by Tbilisi City Hall","meaning":"Article headline","freshness":"live","notes":"Publisher copyrighted text"},
+        {"field":"seendate","type":"YYYYMMDDTHHMMSSZ string","nullable":"No","example":"20260717T114500Z","meaning":"Time GDELT first/most relevantly saw article","freshness":"live"},
+        {"field":"socialimage","type":"URL string","nullable":"Yes","example":"https://armtimes.com/static/article/…jpg","meaning":"Detected social-preview image","freshness":"reference","notes":"Publisher copyrighted and may disappear"},
+        {"field":"domain","type":"hostname string","nullable":"No","example":"archdaily.com","meaning":"Publisher domain","freshness":"reference"},
+        {"field":"language","type":"string","nullable":"No","example":"English","meaning":"Detected article language","freshness":"derived"},
+        {"field":"sourcecountry","type":"string","nullable":"No","example":"United States","meaning":"GDELT country attribution for source outlet","freshness":"derived","notes":"Not the event location"}
+      ]}
+    ],
+    "samples": [{"label":"Tbilisi municipal-decision article metadata","retrievedAt":"2026-07-22 14:01 Asia/Tbilisi","format":"JSON","value":"{\"url\":\"https://www.archdaily.com/1148847/studio-fuksas-rike-park-cultural-complex-approved-for-demolition-by-tbilisi-city-hall\",\"url_mobile\":\"\",\"title\":\"Studio Fuksas Rike Park Cultural Complex Approved for Demolition by Tbilisi City Hall\",\"seendate\":\"20260717T114500Z\",\"socialimage\":\"\",\"domain\":\"archdaily.com\",\"language\":\"English\",\"sourcecountry\":\"United States\"}"}],
+    "caveats": ["Keyword match can refer to Tbilisi without describing an event located there", "sourcecountry is outlet origin, not article subject location", "Duplicate/syndicated stories and machine translation occur", "Article and image copyrights remain with publishers", "API enforces throttling and returned 429 during validation", "News claims need source verification"],
+    "reliability": ["Delayed retry returned current multilingual article records", "Machine-readable first-seen timestamp and domain support deduplication", "Explicit query/time window makes retrieval reproducible"],
+    "privacy": ["News may name individuals; avoid republishing personal details or treating mentions as verified allegations"],
+    "citations": [
+      {"label":"GDELT DOC 2.0 API","url":"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/","type":"Documentation"},
+      {"label":"GDELT data site","url":"https://www.gdeltproject.org/data.html","type":"Primary"}
+    ]
+  },
+  {
+    "slug": "osm-tbilisi-changesets",
+    "name": "OpenStreetMap changeset metadata for Tbilisi",
+    "shortName": "OSM Tbilisi edits",
+    "category": "Geospatial infrastructure",
+    "subcategory": "Collaborative map change metadata",
+    "executiveSummary": "The OpenStreetMap API exposes recent changesets intersecting a Tbilisi bounding box. The tested two-day query returned 17 changesets with creation/closure times, edit counts split into created/modified/deleted objects, change bounds, discussion count, mapper identity and free-form tags such as comment, editor, hashtags and imagery/source. This is a precise audit trail of mapping activity, not a direct list of the changed roads or amenities; individual object diffs require additional changeset-download or replication processing.",
+    "provider": "OpenStreetMap contributors / OpenStreetMap Foundation",
+    "sourceKind": "Open collaborative platform",
+    "geography": "Global; validated bbox 44.70,41.67,44.88,41.80 in Tbilisi",
+    "freshness": "Near real-time",
+    "updateCadence": "Event-driven changesets; global replication diffs are also published minutely",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 14:00 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated OSM API XML query for changesets by bbox/time. Read-only API usage must follow OSM API/usage policies; large-scale history ingestion should use replication diffs or extracts rather than repeatedly polling the main API.",
+    "license": "OpenStreetMap database under ODbL 1.0; attribution to OpenStreetMap contributors required. Usernames and changeset comments are public contributor metadata and require responsible handling.",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "recordCount": "17 changesets intersecting the tested bbox/time range",
+    "keyEntities": ["OSM document", "Changeset", "Changeset tag", "Replication state"],
+    "accessPoints": [
+      {"label":"Validated Tbilisi changeset query","url":"https://api.openstreetmap.org/api/0.6/changesets?bbox=44.70,41.67,44.88,41.80&time=2026-07-21T00:00:00Z,2026-07-22T23:59:59Z","method":"GET","format":"OSM XML","authentication":"None"},
+      {"label":"Minute replication state","url":"https://planet.openstreetmap.org/replication/minute/state.txt","method":"GET","format":"Text","authentication":"None"},
+      {"label":"Changeset API documentation","url":"https://wiki.openstreetmap.org/wiki/API_v0.6#Changesets","method":"GET","format":"HTML documentation","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"OSM root","description":"Document metadata attached to the XML response.","fields":[
+        {"field":"osm@version / generator","type":"strings","nullable":"No","example":"0.6 / OpenStreetMap server","meaning":"API format version and producer","freshness":"reference"},
+        {"field":"osm@copyright / attribution / license","type":"strings/URLs","nullable":"No","example":"OpenStreetMap and contributors / copyright URL / ODbL URL","meaning":"Rights and attribution metadata","freshness":"reference"}
+      ]},
+      {"name":"Changeset","description":"One editing transaction intersecting the bbox.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"186157074","meaning":"Changeset identifier","freshness":"reference"},
+        {"field":"created_at / closed_at","type":"ISO datetimes","nullable":"No","example":"2026-07-22T05:46:04Z / 05:46:05Z","meaning":"Editing transaction lifetime","freshness":"live"},
+        {"field":"open","type":"boolean string","nullable":"No","example":"false","meaning":"Whether changeset can still receive edits","freshness":"live"},
+        {"field":"comments_count","type":"integer","nullable":"No","example":"0","meaning":"Discussion-comment count","freshness":"live"},
+        {"field":"changes_count","type":"integer","nullable":"No","example":"1","meaning":"Total object changes","freshness":"derived"},
+        {"field":"created_count / modified_count / deleted_count","type":"integers","nullable":"No","example":"0 / 1 / 0","meaning":"Changed objects by operation","freshness":"derived"},
+        {"field":"min_lat / min_lon / max_lat / max_lon","type":"decimal degrees","nullable":"Yes","example":"41.7197367 / 44.7091904 / 41.7199274 / 44.7096334","meaning":"Bounding box of changed objects","freshness":"reference"},
+        {"field":"uid / user","type":"integer / string","nullable":"No","example":"20577594 / birimkulova","meaning":"Public contributor ID and display name","freshness":"reference"},
+        {"field":"tag[]@k / @v","type":"string pairs","nullable":"Yes","example":"comment=roads were added #wbgeo","meaning":"Free-form changeset metadata","freshness":"reference","notes":"Observed keys include comment, created_by, hashtags, source, host and revert fields"}
+      ]},
+      {"name":"Replication state","description":"Global minute-diff checkpoint used for scalable incremental processing.","fields":[
+        {"field":"sequenceNumber","type":"integer","nullable":"No","example":"global sequence","meaning":"Latest replication-diff sequence","freshness":"live"},
+        {"field":"timestamp","type":"escaped ISO datetime","nullable":"No","example":"YYYY-MM-DDTHH\\:MM\\:SSZ","meaning":"State timestamp","freshness":"live"},
+        {"field":"txnMaxQueried","type":"integer","nullable":"Unknown","example":"database transaction ID","meaning":"Maximum database transaction queried","freshness":"live"}
+      ]}
+    ],
+    "samples": [{"label":"Recent Tbilisi changeset","retrievedAt":"2026-07-22 14:00 Asia/Tbilisi","format":"Text","value":"<changeset id=\"186157074\" created_at=\"2026-07-22T05:46:04Z\" open=\"false\" comments_count=\"0\" changes_count=\"1\" created_count=\"0\" modified_count=\"1\" deleted_count=\"0\" closed_at=\"2026-07-22T05:46:05Z\" min_lat=\"41.7197367\" min_lon=\"44.7091904\" max_lat=\"41.7199274\" max_lon=\"44.7096334\" uid=\"20577594\" user=\"birimkulova\"><tag k=\"comment\" v=\"roads were added #wbgeo\"/><tag k=\"created_by\" v=\"JOSM/1.5 (19555 ru)\"/><tag k=\"source\" v=\"NAPR\"/></changeset>"}],
+    "caveats": ["Changeset bbox can intersect Tbilisi even if only some edits are inside", "Metadata does not identify exact changed objects; fetch changeset diff separately", "Comments and source tags are user-entered and not guaranteed accurate", "Public contributor usernames are personal data", "Use replication for scale and honor OSM API policy"],
+    "reliability": ["Live API returned 17 recent changesets", "Edit-operation counts and bounds are explicit", "Global minute replication provides a scalable incremental path"],
+    "privacy": ["Do not rank, profile or harass individual mappers from uid/user fields", "Preserve legitimate attribution while minimizing unnecessary personal-data retention"],
+    "citations": [
+      {"label":"OSM API changesets","url":"https://wiki.openstreetmap.org/wiki/API_v0.6#Changesets","type":"Documentation"},
+      {"label":"OSM minute replication","url":"https://planet.openstreetmap.org/replication/minute/","type":"Primary"},
+      {"label":"OpenStreetMap copyright and license","url":"https://www.openstreetmap.org/copyright","type":"Documentation"}
+    ],
+    "featured": true
+  }
+]

@@ -1,0 +1,484 @@
+[
+  {
+    "slug": "tbilisi-gtfs-static",
+    "name": "Tbilisi Transport Company processed GTFS schedule",
+    "shortName": "Tbilisi static GTFS",
+    "category": "Mobility",
+    "subcategory": "Public-transport schedules and network reference",
+    "executiveSummary": "Transitous republishes a processed GTFS Schedule snapshot for Tbilisi containing full-size bus, minibus, both metro lines and three gondola/ropeway services. It includes stops, route metadata, dated service calendars, trips, ordered stop times, and English/Georgian translations. This is schedule and network-reference data, not live movement. The processed feed deliberately omits shapes.txt because the source configuration sets drop-shapes=true.",
+    "provider": "Transitous community mirror; upstream identified as Tbilisi Transport Company",
+    "sourceKind": "Community mirror",
+    "geography": "Tbilisi municipal public-transport network and outer municipal settlements",
+    "freshness": "Daily",
+    "updateCadence": "Rolling static schedule; HTTP Last-Modified was 2026-07-21 03:39:32 UTC and calendar coverage was 2026-07-21 through 2026-08-18",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:38–13:46 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated GTFS ZIP over HTTPS. The tested processed file contained seven UTF-8 CSV tables. Transitous requests visible source attribution and recommends direct GTFS downloads instead of repeated journey-API calls.",
+    "license": "No license information is declared for the underlying TTC feed; Transitous processing does not create an open-data license",
+    "recordCount": "1 agency; 2,374 stops; 284 routes; 9 calendars; 63,641 trips; 1,782,496 stop times; 5,318 translations",
+    "keyEntities": ["Agency", "Stop", "Route", "Service calendar", "Trip", "Scheduled stop time", "Translation"],
+    "accessPoints": [
+      {"label":"Processed GTFS ZIP","url":"https://api.transitous.org/gtfs/ge_tbilisi-transport-company.gtfs.zip","method":"GET","format":"GTFS Schedule ZIP containing CSV","authentication":"None"},
+      {"label":"Listed upstream mirror","url":"https://jbb.ghsq.de/gtfs/ge-tbilisi.gtfs.zip","method":"GET","format":"GTFS Schedule ZIP","authentication":"None","notes":"Listed in Transitous configuration; processed output was the validated artifact"},
+      {"label":"Transitous source configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","method":"GET","format":"JSON source configuration","authentication":"None","notes":"Declares drop-shapes=true and no feed license"}
+    ],
+    "schemas": [
+      {"name":"agency.txt","description":"One feed publisher/operator record.","fields":[
+        {"field":"agency_id","type":"string","nullable":"No","example":"TTC","meaning":"Agency identifier","freshness":"reference"},
+        {"field":"agency_name","type":"string","nullable":"No","example":"Tbilisi Transport Company","meaning":"Agency display name","freshness":"reference"},
+        {"field":"agency_url","type":"URL string","nullable":"No","example":"https://ttc.com.ge","meaning":"Agency website","freshness":"reference"},
+        {"field":"agency_timezone","type":"IANA timezone","nullable":"No","example":"Asia/Tbilisi","meaning":"Timezone used by schedule times","freshness":"reference"},
+        {"field":"agency_lang","type":"language code","nullable":"No","example":"ka","meaning":"Primary feed language","freshness":"reference"},
+        {"field":"agency_phone","type":"string","nullable":"No","example":"032 293 44 44","meaning":"Public agency telephone","freshness":"reference"},
+        {"field":"agency_fare_url","type":"URL string","nullable":"No","example":"https://ttc.com.ge/en/tariffs","meaning":"Fare-information page","freshness":"reference"},
+        {"field":"agency_email","type":"string","nullable":"No","example":"info@metro.ge","meaning":"Public agency email","freshness":"reference"}
+      ]},
+      {"name":"stops.txt","description":"Transit stops and stations across bus, minibus, metro and gondola modes.","fields":[
+        {"field":"stop_name","type":"string","nullable":"No","example":"#102-ე საჯარო სკოლა","meaning":"Stop or station display name","freshness":"reference","notes":"Base feed is primarily Georgian"},
+        {"field":"stop_code","type":"string","nullable":"Yes","example":"3280","meaning":"Public-facing stop code","freshness":"reference","notes":"29 blanks, corresponding to non-bus stops"},
+        {"field":"stop_id","type":"string","nullable":"No","example":"1:3280","meaning":"Feed-unique stop identifier","freshness":"reference"},
+        {"field":"stop_lat","type":"decimal degrees","nullable":"No","example":"41.733616","meaning":"WGS84 latitude","freshness":"reference"},
+        {"field":"stop_lon","type":"decimal degrees","nullable":"No","example":"44.724983","meaning":"WGS84 longitude","freshness":"reference"}
+      ]},
+      {"name":"routes.txt","description":"Bus, minibus, metro and aerial-lift route records.","fields":[
+        {"field":"route_long_name","type":"string","nullable":"No","example":"9 ძმის ქ. -ცაიშის ქ. - სადგურის მოედანი","meaning":"Route endpoints or description","freshness":"reference"},
+        {"field":"route_short_name","type":"string","nullable":"No","example":"368","meaning":"Rider-facing route number","freshness":"reference"},
+        {"field":"agency_id","type":"string","nullable":"No","example":"TTC","meaning":"Foreign key to agency.txt","freshness":"reference"},
+        {"field":"route_type","type":"integer enum","nullable":"No","example":"3","meaning":"GTFS transport mode","freshness":"reference","notes":"Observed: 1 subway, 3 bus/minibus, 6 aerial lift"},
+        {"field":"route_id","type":"string","nullable":"No","example":"1:minibusR2518","meaning":"Feed-unique route identifier","freshness":"reference","notes":"ID prefix distinguishes bus from minibus"},
+        {"field":"route_color","type":"RGB hex string","nullable":"No","example":"0033B4","meaning":"Suggested route display color without #","freshness":"reference"}
+      ]},
+      {"name":"calendar.txt","description":"Recurring weekday service patterns and the current short schedule horizon.","fields":[
+        {"field":"monday…sunday","type":"seven 0/1 integer columns","nullable":"No","example":"1","meaning":"Whether the service runs on each weekday","freshness":"reference"},
+        {"field":"start_date","type":"YYYYMMDD string","nullable":"No","example":"20260721","meaning":"First date the recurring service rule applies","freshness":"reference"},
+        {"field":"end_date","type":"YYYYMMDD string","nullable":"No","example":"20260818","meaning":"Last date the recurring service rule applies","freshness":"reference"},
+        {"field":"service_id","type":"string","nullable":"No","example":"MONDAY-FRIDAY","meaning":"Service-pattern key used by trips","freshness":"reference"}
+      ]},
+      {"name":"trips.txt","description":"One directional scheduled trip on a route and service pattern.","fields":[
+        {"field":"route_id","type":"string","nullable":"No","example":"1:Gondola_Gondola_1","meaning":"Route foreign key","freshness":"reference"},
+        {"field":"service_id","type":"string","nullable":"No","example":"MONDAY-SUNDAY","meaning":"Calendar foreign key","freshness":"reference"},
+        {"field":"trip_headsign","type":"string","nullable":"No","example":"ნარიყალა","meaning":"Trip direction or destination","freshness":"reference"},
+        {"field":"direction_id","type":"0/1 integer","nullable":"No","example":"1","meaning":"Direction within the route","freshness":"reference"},
+        {"field":"trip_id","type":"string","nullable":"No","example":"1:Gondola_Gondola_1-1:01-0-0","meaning":"Scheduled-trip identifier","freshness":"reference"}
+      ]},
+      {"name":"stop_times.txt","description":"Scheduled times at each ordered stop of each trip.","fields":[
+        {"field":"trip_id","type":"string","nullable":"No","example":"1:Metro_Metro_1-0:01-0-0","meaning":"Trip foreign key","freshness":"reference"},
+        {"field":"arrival_time","type":"GTFS time string","nullable":"No","example":"06:00:00","meaning":"Scheduled arrival time","freshness":"reference","notes":"GTFS times can exceed 24:00"},
+        {"field":"departure_time","type":"GTFS time string","nullable":"No","example":"06:00:00","meaning":"Scheduled departure time","freshness":"reference"},
+        {"field":"stop_id","type":"string","nullable":"No","example":"1:metro_1_1","meaning":"Stop foreign key","freshness":"reference"},
+        {"field":"stop_sequence","type":"integer","nullable":"No","example":"0","meaning":"Stop order within trip","freshness":"reference","notes":"Starts at zero in this feed"}
+      ]},
+      {"name":"translations.txt","description":"English and Georgian translations for routes, stops and trip headsigns.","fields":[
+        {"field":"table_name","type":"string","nullable":"No","example":"routes","meaning":"GTFS table being translated","freshness":"reference"},
+        {"field":"field_name","type":"string","nullable":"No","example":"route_long_name","meaning":"Field being translated","freshness":"reference"},
+        {"field":"language","type":"language code","nullable":"No","example":"en","meaning":"Translation language","freshness":"reference","notes":"Observed en and ka"},
+        {"field":"translation","type":"string","nullable":"No","example":"Rike - Narikala","meaning":"Translated text","freshness":"reference"},
+        {"field":"record_id","type":"string","nullable":"Yes","example":"1:Gondola_Gondola_1","meaning":"Record-ID selector","freshness":"reference","notes":"May be blank under GTFS field-value selection rules"},
+        {"field":"field_value","type":"string","nullable":"Yes","example":"","meaning":"Alternate field-value selector","freshness":"reference"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Three transport modes from routes.txt","retrievedAt":"2026-07-22 13:38 Asia/Tbilisi","format":"CSV","value":"route_long_name,route_short_name,agency_id,route_type,route_id,route_color\nმ/ს ახმეტელი - მ/ს ვარკეთილი,1,TTC,1,1:Metro_Metro_1,FF505B\nავშნის III შეს. - მ/ს \"ახმეტელის თეატრი\",508,TTC,3,1:minibusR2518,0033B4\nრიყე - ნარიყალა,1,TTC,6,1:Gondola_Gondola_1,F5861F"}
+    ],
+    "caveats": ["Processed community mirror, not an official TTC open-data publication", "No shapes.txt or calendar_dates.txt in the validated processed snapshot", "Underlying TTC data license is unclear", "Static times do not prove that a vehicle is operating or on time", "The 28-day calendar horizon requires regular refresh"],
+    "reliability": ["HTTP metadata and every CSV table were inspected on 2026-07-22", "Counts and route-type distributions were calculated from the downloaded ZIP", "Use calendar.txt and HTTP headers rather than relying only on catalog metadata"],
+    "privacy": ["Contains public network and schedule data, not passenger or fare-validation records"],
+    "citations": [
+      {"label":"Processed Tbilisi GTFS","url":"https://api.transitous.org/gtfs/ge_tbilisi-transport-company.gtfs.zip","type":"Mirror"},
+      {"label":"Transitous Georgia feed configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","type":"Documentation"},
+      {"label":"Transitous API and attribution policy","url":"https://transitous.org/api/","type":"Documentation"}
+    ]
+  },
+  {
+    "slug": "tbilisi-gtfsrt-vehicles",
+    "name": "Tbilisi GTFS-Realtime bus and minibus vehicle positions",
+    "shortName": "Tbilisi GTFS-RT vehicles",
+    "category": "Mobility",
+    "subcategory": "Live public-transport vehicle positions",
+    "executiveSummary": "A community-operated GTFS-Realtime v2.0 feed listed by Transitous publishes timestamped positions for ordinary Tbilisi buses and municipal minibuses. It supplies route and vehicle IDs, WGS84 coordinates, bearing, a per-vehicle observation timestamp, service date, and sometimes a stop and trip ID. During validation every entity was a VehiclePosition; no metro, gondola, TripUpdate or Alert entities were present.",
+    "provider": "Community-operated vm-gtfs.spline.de source listed by Transitous; underlying data appears to originate from TTC passenger systems",
+    "sourceKind": "Community mirror",
+    "geography": "Tbilisi ordinary bus and minibus network",
+    "freshness": "Live",
+    "updateCadence": "Continuously regenerated; two requests three seconds apart had different bytes and entity counts",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:38:53 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated GTFS-Realtime v2.0 FeedMessage over HTTP. Decode with official GTFS-Realtime Protocol Buffer bindings. The source is HTTP-only; HTTPS failed during validation.",
+    "license": "No license is declared in the Transitous configuration for this realtime source",
+    "recordCount": "1,275 VehiclePosition entities in the first sample and 1,274 three seconds later; 652 minibus-route IDs and 623 ordinary-bus route IDs",
+    "keyEntities": ["Feed header", "Vehicle position", "Trip descriptor", "Vehicle descriptor"],
+    "accessPoints": [
+      {"label":"Raw GTFS-Realtime feed","url":"http://vm-gtfs.spline.de/gtfs-rt.pb","method":"GET","format":"GTFS-Realtime v2.0 Protocol Buffer","authentication":"None","notes":"HTTP only; no published rate limit"},
+      {"label":"Transitous source configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","method":"GET","format":"JSON source configuration","authentication":"None"},
+      {"label":"GTFS-Realtime reference","url":"https://gtfs.org/documentation/realtime/reference/","method":"GET","format":"HTML documentation","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"Feed header","description":"Feed-wide GTFS-Realtime metadata.","fields":[
+        {"field":"header.gtfsRealtimeVersion","type":"string","nullable":"No","example":"2.0","meaning":"GTFS-Realtime schema version","freshness":"reference"},
+        {"field":"header.incrementality","type":"enum","nullable":"No","example":"FULL_DATASET","meaning":"Each response replaces the previous full state","freshness":"reference"},
+        {"field":"header.timestamp","type":"uint64 Unix seconds","nullable":"No","example":"1784713133","meaning":"Feed generation time","freshness":"live","notes":"2026-07-22 13:38:53 Asia/Tbilisi in the tested response"}
+      ]},
+      {"name":"VehiclePosition entity","description":"One observed bus or minibus and its current location.","fields":[
+        {"field":"entity[].id","type":"string","nullable":"No","example":"1:2056","meaning":"Feed entity identifier","freshness":"live","notes":"Same as vehicle ID in the sample"},
+        {"field":"entity[].vehicle.trip.startDate","type":"YYYYMMDD string","nullable":"No","example":"20260722","meaning":"Trip service day","freshness":"reference"},
+        {"field":"entity[].vehicle.trip.routeId","type":"string","nullable":"No","example":"1:R97622","meaning":"Route ID matching static GTFS","freshness":"reference","notes":"1:minibus… prefix identifies minibus routes"},
+        {"field":"entity[].vehicle.trip.tripId","type":"string","nullable":"Yes","example":"","meaning":"Exact scheduled-trip identifier when matched","freshness":"reference","notes":"Non-empty for 537 of 1,275 entities"},
+        {"field":"entity[].vehicle.position.latitude","type":"float","nullable":"No","example":"41.70671463012695","meaning":"Current WGS84 latitude","freshness":"live"},
+        {"field":"entity[].vehicle.position.longitude","type":"float","nullable":"No","example":"44.80546569824219","meaning":"Current WGS84 longitude","freshness":"live"},
+        {"field":"entity[].vehicle.position.bearing","type":"float","nullable":"No","example":"346.525146484375","meaning":"Heading in degrees clockwise from north","freshness":"live"},
+        {"field":"entity[].vehicle.timestamp","type":"uint64 Unix seconds","nullable":"No","example":"1784713117","meaning":"Vehicle position observation time","freshness":"live","notes":"16 seconds behind the feed header in the sample"},
+        {"field":"entity[].vehicle.stopId","type":"string","nullable":"Yes","example":"1:1726","meaning":"Current or next associated stop according to the producer","freshness":"live","notes":"Blank for 458 of 1,275 entities; exact semantics undocumented"},
+        {"field":"entity[].vehicle.vehicle.id","type":"string","nullable":"No","example":"1:2056","meaning":"Public-service vehicle identifier","freshness":"live"}
+      ]},
+      {"name":"Standard VehiclePosition fields not populated","description":"Fields defined by GTFS-Realtime but absent in every tested entity.","fields":[
+        {"field":"position.speed","type":"float","nullable":"Yes","example":"absent","meaning":"Vehicle speed","freshness":"live"},
+        {"field":"position.odometer","type":"double","nullable":"Yes","example":"absent","meaning":"Vehicle odometer","freshness":"live"},
+        {"field":"currentStopSequence / currentStatus","type":"integer / enum","nullable":"Yes","example":"absent","meaning":"Stop progression state","freshness":"live"},
+        {"field":"congestionLevel","type":"enum","nullable":"Yes","example":"absent","meaning":"Traffic congestion state","freshness":"live"},
+        {"field":"occupancyStatus / occupancyPercentage","type":"enum / integer","nullable":"Yes","example":"absent","meaning":"Passenger crowding or occupancy","freshness":"live"},
+        {"field":"vehicle.label / licensePlate / wheelchairAccessible","type":"string / enum","nullable":"Yes","example":"absent","meaning":"Additional vehicle descriptors","freshness":"reference"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Decoded VehiclePosition","retrievedAt":"2026-07-22 13:38:53 Asia/Tbilisi","format":"Protocol Buffer","value":"{\n  \"id\": \"1:2056\",\n  \"vehicle\": {\n    \"trip\": {\"startDate\": \"20260722\", \"routeId\": \"1:R97622\"},\n    \"position\": {\"latitude\": 41.70671463012695, \"longitude\": 44.80546569824219, \"bearing\": 346.525146484375},\n    \"timestamp\": \"1784713117\",\n    \"stopId\": \"1:1726\",\n    \"vehicle\": {\"id\": \"1:2056\"}\n  }\n}","note":"JSON rendering of a Protocol Buffer entity decoded with official GTFS-Realtime bindings"}
+    ],
+    "caveats": ["Community-hosted and HTTP-only, creating integrity and uptime risks", "No stated reuse license or published rate limit", "stopId and tripId are often blank", "No speed, occupancy, congestion, accessibility or position-accuracy fields", "No metro or gondola positions, TripUpdates or Alerts were observed"],
+    "reliability": ["Two live responses three seconds apart changed from 1,275 to 1,274 entities", "Header and per-vehicle timestamps were current at retrieval", "The feed is FULL_DATASET, so consumers must replace state instead of appending"],
+    "privacy": ["Vehicle IDs identify public-service vehicles, not riders", "No passenger identity or occupancy values are present"],
+    "citations": [
+      {"label":"Raw Tbilisi GTFS-Realtime feed","url":"http://vm-gtfs.spline.de/gtfs-rt.pb","type":"Mirror"},
+      {"label":"Transitous Georgia source configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","type":"Documentation"},
+      {"label":"GTFS-Realtime reference","url":"https://gtfs.org/documentation/realtime/reference/","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "transitous-tbilisi-api",
+    "name": "Transitous normalized Tbilisi realtime and routing API",
+    "shortName": "Transitous Tbilisi API",
+    "category": "Mobility",
+    "subcategory": "Normalized departures, routing and map segments",
+    "executiveSummary": "Transitous runs the open-source MOTIS engine over Tbilisi's static GTFS and raw vehicle-position feed. Its versioned JSON API exposes nearby stop events with both scheduled and realtime-adjusted times, stop and route metadata, journey planning, trip details, geocoding and map trip segments. It is simpler to consume than raw protobuf and does not require TTC's embedded application credential, but it is a volunteer-operated best-effort service and inherits upstream licensing and quality limits.",
+    "provider": "Transitous volunteer project using MOTIS 2",
+    "sourceKind": "Open collaborative platform",
+    "geography": "Tbilisi municipal public transport within a worldwide Transitous service",
+    "freshness": "Near real-time",
+    "updateCadence": "Realtime-derived for buses and minibuses; schedule-only for metro and gondola in the tested data",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:44 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated HTTPS JSON API documented by MOTIS OpenAPI. Send a meaningful User-Agent with application name/version/contact or a browser Referer with site contact information. FOSS and non-profit use is encouraged; contact maintainers before high-volume or expensive routing use and show Transitous/source attribution.",
+    "license": "Transitous has a FOSS/non-profit usage policy and attribution requirements; every underlying feed and OpenStreetMap component retains its own terms, and the TTC source license is unclear",
+    "recordCount": "Stop-times test returned 5 events; a separate 10-minute Tbilisi-wide map query returned 9,191 segments: 9,035 bus/minibus, 126 subway, 30 aerial lift, including 2,135 realtime bus segments",
+    "keyEntities": ["Stop-time event", "Place/stop", "Route and trip", "Pagination cursor", "Map trip segment"],
+    "accessPoints": [
+      {"label":"Nearby stop times","url":"https://api.transitous.org/api/v6/stoptimes","method":"GET","format":"JSON","authentication":"None; identifying User-Agent or Referer required by policy","notes":"Tested parameters: center, radius, n and language"},
+      {"label":"Map trip segments","url":"https://api.transitous.org/api/v6/map/trips","method":"GET","format":"JSON","authentication":"None; identifying User-Agent or Referer required by policy","notes":"Accepts zoom, min/max bounds, startTime/endTime, precision and languages; this returns trip segments, not raw vehicle dots"},
+      {"label":"Transitous usage and attribution policy","url":"https://transitous.org/api/","method":"GET","format":"HTML documentation","authentication":"None"},
+      {"label":"MOTIS v2.10.2 OpenAPI","url":"https://raw.githubusercontent.com/motis-project/motis/refs/tags/v2.10.2/openapi.yaml","method":"GET","format":"OpenAPI YAML","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"Stop-times response","description":"Top-level response for nearby stop events.","fields":[
+        {"field":"stopTimes[]","type":"array<object>","nullable":"No","example":"5 records","meaning":"Arrival and departure events around the requested point","freshness":"derived"},
+        {"field":"place","type":"Place object","nullable":"No","example":"{name:\"center\",lat:41.72072,lon:44.74624}","meaning":"Requested coordinate or stop anchor","freshness":"derived","notes":"Not necessarily a transit stop"},
+        {"field":"previousPageCursor","type":"opaque string","nullable":"No","example":"long cursor token","meaning":"Cursor for earlier events","freshness":"derived","notes":"Do not parse"},
+        {"field":"nextPageCursor","type":"opaque string","nullable":"No","example":"long cursor token","meaning":"Cursor for later events","freshness":"derived","notes":"Do not parse"}
+      ]},
+      {"name":"Stop-time event","description":"One route arrival/departure at a selected nearby stop.","fields":[
+        {"field":"place","type":"Place object","nullable":"No","example":"University Street with event times","meaning":"Event stop and timing fields","freshness":"derived"},
+        {"field":"mode","type":"enum string","nullable":"No","example":"BUS","meaning":"Transport mode","freshness":"reference","notes":"Also SUBWAY and AERIAL_LIFT in current API"},
+        {"field":"realTime","type":"boolean","nullable":"No","example":"true","meaning":"Whether a realtime adjustment was applied","freshness":"live"},
+        {"field":"headsign","type":"string","nullable":"No","example":"სახ.უნივერსიტეტის მ/კ","meaning":"Trip direction or destination text","freshness":"reference"},
+        {"field":"tripFrom","type":"Place object","nullable":"No","example":"Didi Dighomi IV Micro-District","meaning":"Scheduled trip origin","freshness":"reference"},
+        {"field":"tripTo","type":"Place object","nullable":"No","example":"Tbilisi State University","meaning":"Scheduled trip destination","freshness":"reference"},
+        {"field":"agencyId","type":"string","nullable":"No","example":"TTC","meaning":"Source agency identifier","freshness":"reference"},
+        {"field":"agencyName","type":"string","nullable":"No","example":"Tbilisi Transport Company","meaning":"Source agency name","freshness":"reference"},
+        {"field":"agencyUrl","type":"URL string","nullable":"No","example":"https://ttc.com.ge","meaning":"Agency website","freshness":"reference"},
+        {"field":"routeId","type":"string","nullable":"No","example":"ge-tbilisi-transport-company_1:R97614","meaning":"Transitous-namespaced route identifier","freshness":"reference"},
+        {"field":"routeUrl","type":"string","nullable":"Yes","example":"","meaning":"Optional agency route URL","freshness":"reference","notes":"Blank in the sample"},
+        {"field":"directionId","type":"string","nullable":"No","example":"1","meaning":"GTFS trip direction","freshness":"reference"},
+        {"field":"routeColor","type":"hex string","nullable":"No","example":"00b38b","meaning":"Route display color without #","freshness":"reference"},
+        {"field":"routeTextColor","type":"hex string","nullable":"No","example":"000000","meaning":"Suggested route-label text color","freshness":"reference"},
+        {"field":"tripId","type":"string","nullable":"No","example":"namespaced dated trip ID","meaning":"Specific scheduled trip identifier","freshness":"reference"},
+        {"field":"routeType","type":"integer","nullable":"No","example":"3","meaning":"GTFS route type","freshness":"reference"},
+        {"field":"routeShortName","type":"string","nullable":"No","example":"311","meaning":"Passenger-facing route number","freshness":"reference"},
+        {"field":"routeLongName","type":"string","nullable":"No","example":"Didi Dighomi IV M/D - Tbilisi State University H/B","meaning":"Route description","freshness":"reference"},
+        {"field":"tripShortName","type":"string","nullable":"Yes","example":"","meaning":"Optional trip number or name","freshness":"reference"},
+        {"field":"displayName","type":"string","nullable":"No","example":"311","meaning":"Consumer-facing service label","freshness":"reference"},
+        {"field":"pickupDropoffType","type":"enum string","nullable":"No","example":"NORMAL","meaning":"Boarding and alighting rule at the event","freshness":"reference"},
+        {"field":"cancelled","type":"boolean","nullable":"No","example":"false","meaning":"Whether this event is canceled","freshness":"live","notes":"No cancellations observed and no Alert source existed upstream"},
+        {"field":"tripCancelled","type":"boolean","nullable":"No","example":"false","meaning":"Whether the whole trip is canceled","freshness":"live"},
+        {"field":"source","type":"string","nullable":"No","example":"...stop_times.txt:401239:401302","meaning":"Source GTFS file and line provenance","freshness":"reference"}
+      ]},
+      {"name":"Event Place","description":"Stop identity, coordinates, scheduled times and current returned times nested in an event.","fields":[
+        {"field":"name","type":"string","nullable":"No","example":"University Street","meaning":"Stop name","freshness":"reference"},
+        {"field":"stopId","type":"string","nullable":"No","example":"ge-tbilisi-transport-company_1:1266","meaning":"Transitous-namespaced stop ID","freshness":"reference"},
+        {"field":"importance","type":"number","nullable":"No","example":"0.0004257434","meaning":"MOTIS search/ranking weight","freshness":"derived","notes":"Not passenger demand or social importance"},
+        {"field":"lat","type":"number","nullable":"No","example":"41.72066","meaning":"WGS84 stop latitude","freshness":"reference"},
+        {"field":"lon","type":"number","nullable":"No","example":"44.746197","meaning":"WGS84 stop longitude","freshness":"reference"},
+        {"field":"level","type":"number","nullable":"No","example":"0","meaning":"OSM or indoor level","freshness":"reference"},
+        {"field":"tz","type":"IANA timezone","nullable":"No","example":"Asia/Tbilisi","meaning":"Stop timezone","freshness":"reference"},
+        {"field":"arrival","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:45:00Z","meaning":"Current returned arrival, adjusted when realtime is available","freshness":"live"},
+        {"field":"departure","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:45:00Z","meaning":"Current returned departure, adjusted when realtime is available","freshness":"live"},
+        {"field":"scheduledArrival","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:39:00Z","meaning":"Original scheduled arrival","freshness":"reference"},
+        {"field":"scheduledDeparture","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:39:00Z","meaning":"Original scheduled departure","freshness":"reference"},
+        {"field":"stopCode","type":"string","nullable":"No","example":"1266","meaning":"Passenger-facing stop code","freshness":"reference"},
+        {"field":"vertexType","type":"enum string","nullable":"No","example":"TRANSIT","meaning":"MOTIS graph location type","freshness":"derived"},
+        {"field":"pickupType","type":"enum string","nullable":"No","example":"NORMAL","meaning":"Boarding rule","freshness":"reference"},
+        {"field":"dropoffType","type":"enum string","nullable":"No","example":"NORMAL","meaning":"Alighting rule","freshness":"reference"},
+        {"field":"cancelled","type":"boolean","nullable":"No","example":"false","meaning":"Whether the event at this stop is canceled","freshness":"live"},
+        {"field":"modes[]","type":"array<enum>","nullable":"No","example":"[\"BUS\"]","meaning":"Modes serving the place","freshness":"reference"}
+      ]},
+      {"name":"Map trip segment","description":"Scheduled or realtime-adjusted segment returned by /api/v6/map/trips; not a raw vehicle dot.","fields":[
+        {"field":"trips[]","type":"array<{tripId,displayName}>","nullable":"No","example":"[{tripId:\"…\",displayName:\"439\"}]","meaning":"Trips sharing the displayed segment","freshness":"reference"},
+        {"field":"routeColor","type":"hex string","nullable":"No","example":"0033b4","meaning":"Route display color","freshness":"reference"},
+        {"field":"mode","type":"enum string","nullable":"No","example":"BUS","meaning":"Segment mode","freshness":"reference","notes":"Also SUBWAY and AERIAL_LIFT"},
+        {"field":"distance","type":"number","nullable":"No","example":"1481.6848","meaning":"Segment distance in metres","freshness":"derived"},
+        {"field":"from","type":"Place object","nullable":"No","example":"origin stop","meaning":"Segment origin stop","freshness":"reference"},
+        {"field":"to","type":"Place object","nullable":"No","example":"destination stop","meaning":"Segment destination stop","freshness":"reference"},
+        {"field":"departure","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:45:00Z","meaning":"Current returned departure","freshness":"live"},
+        {"field":"arrival","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:48:00Z","meaning":"Current returned arrival","freshness":"live"},
+        {"field":"scheduledDeparture","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:39:00Z","meaning":"Original scheduled departure","freshness":"reference"},
+        {"field":"scheduledArrival","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:42:00Z","meaning":"Original scheduled arrival","freshness":"reference"},
+        {"field":"realTime","type":"boolean","nullable":"No","example":"true","meaning":"Whether live adjustment was applied","freshness":"live"},
+        {"field":"polyline","type":"encoded string","nullable":"No","example":"encoded geometry","meaning":"Segment geometry at requested precision","freshness":"derived"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Realtime-adjusted route 311 stop event","retrievedAt":"2026-07-22 13:44 Asia/Tbilisi","format":"JSON","value":"{\n  \"place\": {\n    \"name\": \"University Street\",\n    \"stopId\": \"ge-tbilisi-transport-company_1:1266\",\n    \"arrival\": \"2026-07-22T09:45:00Z\",\n    \"departure\": \"2026-07-22T09:45:00Z\",\n    \"scheduledArrival\": \"2026-07-22T09:39:00Z\",\n    \"scheduledDeparture\": \"2026-07-22T09:39:00Z\",\n    \"stopCode\": \"1266\",\n    \"modes\": [\"BUS\"]\n  },\n  \"mode\": \"BUS\",\n  \"realTime\": true,\n  \"routeShortName\": \"311\",\n  \"displayName\": \"311\",\n  \"cancelled\": false,\n  \"tripCancelled\": false\n}"}
+    ],
+    "caveats": ["Volunteer best-effort service with no TTC SLA", "Map-wide and routing queries can be expensive; coordinate high-volume use", "Realtime flags are derived from the raw vehicle feed and inherit its gaps", "A realTime=false event is schedule-only, not evidence that a service is absent", "Underlying TTC feed has no declared open-data license"],
+    "reliability": ["The nearby stop-times endpoint returned both scheduled and realtime-adjusted events", "The OpenAPI schema and Transitous usage policy are public", "Source-line provenance is included for GTFS-derived records"],
+    "privacy": ["No passenger identities or fare validations are exposed", "importance is a routing/search score and must not be interpreted as ridership"],
+    "citations": [
+      {"label":"Transitous API policy","url":"https://transitous.org/api/","type":"Documentation"},
+      {"label":"Transitous sources and attribution","url":"https://transitous.org/sources/","type":"Documentation"},
+      {"label":"MOTIS v2.10.2 OpenAPI","url":"https://raw.githubusercontent.com/motis-project/motis/refs/tags/v2.10.2/openapi.yaml","type":"Documentation"}
+    ],
+    "featured": true
+  },
+  {
+    "slug": "georgian-railway-public-api",
+    "name": "Official Georgian Railway schedule backend",
+    "shortName": "Georgian Railway JSON",
+    "category": "Mobility",
+    "subcategory": "National rail schedules and station reference",
+    "executiveSummary": "The current official Georgian Railway schedule page uses an unauthenticated JSON backend that exposes a multilingual station directory, all rides operating on a requested date, and a complete ordered list of railway points for each ride. Calling points contain scheduled times while infrastructure/pass-through points contain null times. This is detailed first-party schedule data, not live train tracking: no GPS position, actual or predicted time, delay, platform, cancellation reason or occupancy field was found.",
+    "provider": "JSC Georgian Railway",
+    "sourceKind": "Official public-page backend",
+    "geography": "Georgia's railway network plus international and hidden station-directory records",
+    "freshness": "Daily",
+    "updateCadence": "Date-specific schedule queries and reference tables; /api/config/init also returns current server time",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:40–13:43 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated JSON over HTTPS on the official gr.com.ge domain. The tested endpoints returned CORS Access-Control-Allow-Origin: *. The backend is undocumented, has no published rate limit and uses rideId—not the outer schedule record id or GUID—for ride details.",
+    "license": "No explicit open-data license or API reuse terms were found; public technical access does not itself authorize republication",
+    "recordCount": "515 station-directory records; 34 rides for 2026-07-22; train 802 details contained 105 ordered railway points and 5 scheduled calling points",
+    "keyEntities": ["Station directory record", "Date-specific ride", "Route type", "Schedule template", "Railway point/calling point", "Pagination metadata"],
+    "accessPoints": [
+      {"label":"Official schedule page","url":"https://www.gr.com.ge/en/schedule","method":"GET","format":"HTML","authentication":"None"},
+      {"label":"Station directory","url":"https://www.gr.com.ge/api/stations?page=1&limit=10","method":"GET","format":"JSON","authentication":"None"},
+      {"label":"Suggested stations","url":"https://www.gr.com.ge/api/stations/suggested","method":"GET","format":"JSON","authentication":"None"},
+      {"label":"Date-specific ride summaries","url":"https://www.gr.com.ge/api/schedules/core?startDate=2026-07-22","method":"GET","format":"JSON","authentication":"None","notes":"Page form also supplies startStationId and endStationId filters"},
+      {"label":"Ride details","url":"https://www.gr.com.ge/api/schedules/ride-details/{rideId}","method":"GET","format":"JSON","authentication":"None","notes":"Use list[].rideId, not list[].id or GUID"},
+      {"label":"Server configuration","url":"https://www.gr.com.ge/api/config/init","method":"GET","format":"JSON","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"Station response wrapper","description":"Pagination wrapper returned by /api/stations.","fields":[
+        {"field":"status","type":"string","nullable":"No","example":"success","meaning":"API result status","freshness":"derived"},
+        {"field":"data.data[]","type":"array<object>","nullable":"No","example":"10 records","meaning":"Current station page","freshness":"reference"},
+        {"field":"data.meta.itemsPerPage","type":"integer","nullable":"No","example":"10","meaning":"Effective page size","freshness":"derived"},
+        {"field":"data.meta.totalItems","type":"integer","nullable":"No","example":"515","meaning":"Total station records including hidden and international points","freshness":"derived"},
+        {"field":"data.meta.currentPage","type":"integer","nullable":"No","example":"1","meaning":"Current page number","freshness":"derived"},
+        {"field":"data.meta.totalPages","type":"integer","nullable":"No","example":"52","meaning":"Total page count","freshness":"derived"},
+        {"field":"data.meta.sortBy","type":"array","nullable":"No","example":"[[\"station_country_id\",\"DESC\"]]","meaning":"Applied backend sort","freshness":"derived"},
+        {"field":"data.links.current","type":"URL string","nullable":"No","example":"station page URL","meaning":"Current pagination URL","freshness":"derived","notes":"Returned URLs used HTTP even though the request used HTTPS"},
+        {"field":"data.links.next","type":"URL string","nullable":"Yes","example":"next station page URL","meaning":"Next-page URL","freshness":"derived"},
+        {"field":"data.links.last","type":"URL string","nullable":"No","example":"last station page URL","meaning":"Final-page URL","freshness":"derived"}
+      ]},
+      {"name":"Station","description":"Multilingual directory record; may be hidden or outside Georgia.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"220","meaning":"Website database identifier","freshness":"reference","notes":"Distinct from station_id and station_code"},
+        {"field":"station_id","type":"numeric string","nullable":"No","example":"3","meaning":"External or core station identifier","freshness":"reference"},
+        {"field":"priority","type":"number","nullable":"Yes","example":"null","meaning":"Display or search priority","freshness":"reference"},
+        {"field":"station_code","type":"string","nullable":"No","example":"54681","meaning":"Railway station code","freshness":"reference"},
+        {"field":"station_country","type":"string","nullable":"No","example":"აზერბაიჯანი","meaning":"Country name","freshness":"reference","notes":"Georgian in the sample"},
+        {"field":"station_country_id","type":"string","nullable":"No","example":"6","meaning":"Country identifier serialized as a string","freshness":"reference"},
+        {"field":"name","type":"string","nullable":"No","example":"ბაქანი 526 კმ","meaning":"Default station name","freshness":"reference"},
+        {"field":"name_ka","type":"string","nullable":"No","example":"ბაქანი 526 კმ","meaning":"Georgian station name","freshness":"reference"},
+        {"field":"name_en","type":"string","nullable":"No","example":"Platform 526 km","meaning":"English station name","freshness":"reference"},
+        {"field":"name_ru","type":"string","nullable":"No","example":"ПЛАТФОРМА 526 КМ","meaning":"Russian station name","freshness":"reference","notes":"Trailing padding spaces were observed"},
+        {"field":"hide","type":"boolean","nullable":"No","example":"true","meaning":"Whether the official UI hides the station","freshness":"reference"},
+        {"field":"created_at","type":"ISO datetime","nullable":"No","example":"2024-07-15T12:52:32.613Z","meaning":"Database-record creation time","freshness":"historical","notes":"Not service freshness"},
+        {"field":"updated_at","type":"ISO datetime","nullable":"No","example":"2025-04-17T11:03:31.590Z","meaning":"Last station-record update","freshness":"historical"},
+        {"field":"deleted_at","type":"ISO datetime","nullable":"Yes","example":"null","meaning":"Soft-deletion time","freshness":"historical"}
+      ]},
+      {"name":"Ride-summary response","description":"Date-specific schedules returned by /api/schedules/core.","fields":[
+        {"field":"list[]","type":"array<object>","nullable":"No","example":"34 records","meaning":"Rides on the requested service date","freshness":"reference"},
+        {"field":"paging.pageIndex","type":"integer","nullable":"No","example":"0","meaning":"Zero-based current page","freshness":"derived"},
+        {"field":"paging.pageSize","type":"integer","nullable":"No","example":"99999","meaning":"Effective page size","freshness":"derived"},
+        {"field":"paging.pageSizeItems[]","type":"integer array","nullable":"No","example":"[10,20,30,34]","meaning":"UI page-size choices","freshness":"derived"},
+        {"field":"paging.pageCount","type":"integer","nullable":"No","example":"1","meaning":"Page count","freshness":"derived"},
+        {"field":"paging.rowCount","type":"integer","nullable":"No","example":"34","meaning":"Ride count","freshness":"derived"},
+        {"field":"agregateValues[].aggregate","type":"null or unknown","nullable":"Yes","example":"null","meaning":"Aggregate grouping value","freshness":"derived","notes":"agregateValues is misspelled by the API"},
+        {"field":"agregateValues[].code","type":"string","nullable":"No","example":"count","meaning":"Aggregate metric code","freshness":"derived"},
+        {"field":"agregateValues[].value","type":"integer","nullable":"No","example":"34","meaning":"Aggregate metric value","freshness":"derived"}
+      ]},
+      {"name":"Ride summary","description":"One train service operating on the requested date.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"24011","meaning":"Schedule-instance database ID","freshness":"reference","notes":"Not valid for ride-details"},
+        {"field":"guid","type":"UUID string","nullable":"No","example":"36170945-…","meaning":"Schedule-instance GUID","freshness":"reference","notes":"Not valid for ride-details"},
+        {"field":"rideId","type":"integer","nullable":"No","example":"21278","meaning":"Ride identifier required by the details endpoint","freshness":"reference"},
+        {"field":"routeType","type":"object","nullable":"No","example":"{id:2,code:\"local\",name:\"local\",cultureName:null}","meaning":"Service category","freshness":"reference","notes":"Observed codes: local, district and international"},
+        {"field":"directionId","type":"integer","nullable":"No","example":"1","meaning":"Internal railway direction ID","freshness":"reference","notes":"Semantics undocumented"},
+        {"field":"rideNumber","type":"integer","nullable":"No","example":"802","meaning":"Public train number","freshness":"reference"},
+        {"field":"trainUid","type":"integer","nullable":"No","example":"164","meaning":"Internal train UID","freshness":"reference"},
+        {"field":"schedule","type":"object","nullable":"No","example":"Tbilisi–Batumi code/name object","meaning":"Schedule template","freshness":"reference","notes":"Contains id, code, name and cultureName"},
+        {"field":"isActive","type":"boolean","nullable":"No","example":"true","meaning":"Whether the schedule record is enabled","freshness":"reference","notes":"Not proof that the train is currently moving"},
+        {"field":"isApproved","type":"boolean","nullable":"No","example":"true","meaning":"Timetable approval flag","freshness":"reference"},
+        {"field":"startDate","type":"ISO datetime","nullable":"No","example":"2026-07-22T04:00:00Z","meaning":"Scheduled origin departure","freshness":"reference"},
+        {"field":"endDate","type":"ISO datetime","nullable":"No","example":"2026-07-22T09:12:00Z","meaning":"Scheduled destination arrival","freshness":"reference"},
+        {"field":"startStation","type":"code/name object","nullable":"No","example":"{id:98,code:\"56014\",name:\"TBILISI(pass)\",cultureName:null}","meaning":"Origin station","freshness":"reference"},
+        {"field":"endStation","type":"code/name object","nullable":"No","example":"{id:309,code:\"57151\",name:\"BATUMI(pass)\",cultureName:null}","meaning":"Destination station","freshness":"reference"},
+        {"field":"numberOfStandinStation","type":"integer","nullable":"No","example":"5","meaning":"Number of scheduled calling or standing stations","freshness":"reference","notes":"Field name is misspelled in the API"}
+      ]},
+      {"name":"Shared code/name object","description":"Shape shared by route types, schedules and core station references.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"98","meaning":"Internal entity ID","freshness":"reference"},
+        {"field":"code","type":"string","nullable":"No","example":"56014","meaning":"Entity code; meaning depends on parent object","freshness":"reference"},
+        {"field":"name","type":"string","nullable":"No","example":"TBILISI(pass)","meaning":"Core display name","freshness":"reference"},
+        {"field":"cultureName","type":"string","nullable":"Yes","example":"null","meaning":"Localized name override","freshness":"reference"}
+      ]},
+      {"name":"Ride detail point","description":"One ordered passenger or infrastructure railway point in /ride-details/{rideId}.","fields":[
+        {"field":"id","type":"integer","nullable":"No","example":"1277076","meaning":"Detail-row database ID","freshness":"reference"},
+        {"field":"guid","type":"UUID string","nullable":"No","example":"da7ea5d0-…","meaning":"Detail-row GUID","freshness":"reference"},
+        {"field":"index","type":"integer","nullable":"No","example":"72","meaning":"One-based order along the ride","freshness":"reference"},
+        {"field":"stationId","type":"integer","nullable":"No","example":"385","meaning":"Internal station foreign key","freshness":"reference"},
+        {"field":"station","type":"code/name object","nullable":"No","example":"Kutaisi International Airport point","meaning":"Railway point identity","freshness":"reference"},
+        {"field":"distanceValue","type":"number","nullable":"No","example":"2","meaning":"Distance increment or segment value","freshness":"reference","notes":"Unit undocumented; values behave like kilometres"},
+        {"field":"distanceCountryId","type":"integer","nullable":"Yes","example":"4","meaning":"Country associated with the distance segment","freshness":"reference"},
+        {"field":"arrivalTimeHour","type":"integer","nullable":"Yes","example":"11","meaning":"Local scheduled arrival hour","freshness":"reference","notes":"Null at non-calling points"},
+        {"field":"arrivalTimeMinute","type":"integer","nullable":"Yes","example":"18","meaning":"Local scheduled arrival minute","freshness":"reference"},
+        {"field":"arrivalDateTime","type":"ISO datetime","nullable":"Yes","example":"2026-07-22T07:18:00Z","meaning":"Scheduled arrival instant","freshness":"reference"},
+        {"field":"departureTimeHour","type":"integer","nullable":"Yes","example":"11","meaning":"Local scheduled departure hour","freshness":"reference"},
+        {"field":"departureTimeMinute","type":"integer","nullable":"Yes","example":"22","meaning":"Local scheduled departure minute","freshness":"reference"},
+        {"field":"departureDateTime","type":"ISO datetime","nullable":"Yes","example":"2026-07-22T07:22:00Z","meaning":"Scheduled departure instant","freshness":"reference"},
+        {"field":"dayNumber","type":"integer","nullable":"Yes","example":"0","meaning":"Day offset from ride start","freshness":"reference"},
+        {"field":"isStandingStation","type":"boolean","nullable":"Yes","example":"true","meaning":"Whether the train calls at this point","freshness":"reference","notes":"Null for pass-through points"},
+        {"field":"standingTime","type":"number","nullable":"No","example":"4","meaning":"Scheduled dwell time in minutes","freshness":"reference","notes":"Zero at non-stops and the origin"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Train 802 ride summary","retrievedAt":"2026-07-22 13:42 Asia/Tbilisi","format":"JSON","value":"{\"rideId\":21278,\"routeType\":{\"id\":2,\"code\":\"local\",\"name\":\"local\",\"cultureName\":null},\"rideNumber\":802,\"startDate\":\"2026-07-22T04:00:00Z\",\"endDate\":\"2026-07-22T09:12:00Z\",\"startStation\":{\"id\":98,\"code\":\"56014\",\"name\":\"TBILISI(pass)\",\"cultureName\":null},\"endStation\":{\"id\":309,\"code\":\"57151\",\"name\":\"BATUMI(pass)\",\"cultureName\":null},\"numberOfStandinStation\":5}"},
+      {"label":"Calling point and pass-through point","retrievedAt":"2026-07-22 13:43 Asia/Tbilisi","format":"JSON","value":"[{\"index\":72,\"station\":{\"id\":385,\"code\":\"57450\",\"name\":\"qutaisis saertashoriso aeroporti\",\"cultureName\":null},\"arrivalDateTime\":\"2026-07-22T07:18:00Z\",\"departureDateTime\":\"2026-07-22T07:22:00Z\",\"isStandingStation\":true,\"standingTime\":4},{\"index\":2,\"station\":{\"id\":101,\"code\":\"56020\",\"name\":\"tbilisi-satv\",\"cultureName\":null},\"arrivalDateTime\":null,\"departureDateTime\":null,\"isStandingStation\":null,\"standingTime\":0}]"}
+    ],
+    "caveats": ["Undocumented public-page backend with no version or rate-limit guarantee", "No open-data/reuse license found", "Scheduled times are not actual or predicted times", "No GPS, delay, platform, cancellation reason, seat availability or occupancy fields", "Station directory includes hidden and foreign records and mixed-quality transliterations", "isActive is configuration state, not live movement"],
+    "reliability": ["All endpoints returned current JSON from the official domain", "The tested ride-details parameter was independently verified as rideId", "Complete route-point ordering makes passenger calls distinguishable from pass-through infrastructure points"],
+    "privacy": ["Contains schedules and public infrastructure records, not traveler bookings or passenger identities"],
+    "citations": [
+      {"label":"Official Georgian Railway schedule","url":"https://www.gr.com.ge/en/schedule","type":"Primary"},
+      {"label":"Official station API","url":"https://www.gr.com.ge/api/stations?page=1&limit=10","type":"Primary"},
+      {"label":"Official dated schedule API","url":"https://www.gr.com.ge/api/schedules/core?startDate=2026-07-22","type":"Primary"}
+    ]
+  },
+  {
+    "slug": "georgian-railway-gtfs",
+    "name": "Community-generated Georgian Railway GTFS",
+    "shortName": "Georgia rail GTFS",
+    "category": "Mobility",
+    "subcategory": "National rail schedules and geometry",
+    "executiveSummary": "Transitous publishes a community-generated Georgian Railway GTFS feed under ODbL-1.0. It contains 85 passenger stops, detailed railway shapes, 38 train-number routes, dated service exceptions, 416 generated trips, 4,089 calling times and stop-name translations in English, Georgian and Russian. Compared with the official Railway JSON backend it is openly licensed and map-ready; it is also derived rather than first-party and is not realtime.",
+    "provider": "Jonah Brüchert / Transitous community, derived from Georgian Railway schedules and OpenStreetMap geometry",
+    "sourceKind": "Community mirror",
+    "geography": "Georgia's national rail network and scheduled international endpoints",
+    "freshness": "Daily",
+    "updateCadence": "Rolling schedule; HTTP Last-Modified was 2026-07-21 23:27:46 UTC and feed_info covered 2026-07-21 through 2026-11-17",
+    "evidence": "Live-tested",
+    "testedAt": "2026-07-22 13:45 Asia/Tbilisi",
+    "accessSummary": "Unauthenticated GTFS Schedule ZIP over HTTPS, generated by an open-source community pipeline. The ZIP has a duplicated attributions.txt member; robust consumers should tolerate duplicate ZIP member names while preserving the logical attribution row.",
+    "license": "Open Database License 1.0 (ODbL-1.0); attributions.txt credits OpenStreetMap contributors",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "recordCount": "1 agency; 1 feed_info; 85 stops; 115,902 shape points; 38 routes; 4,179 calendar-date rows; 416 trips; 4,089 stop times; 1 logical attribution; 255 translations",
+    "keyEntities": ["Agency", "Feed metadata", "Rail stop", "Route shape", "Train-number route", "Dated service", "Trip", "Calling time", "Attribution", "Translation"],
+    "accessPoints": [
+      {"label":"Processed Georgian Railway GTFS","url":"https://api.transitous.org/gtfs/ge_georgian-railway.gtfs.zip","method":"GET","format":"GTFS Schedule ZIP containing CSV","authentication":"None"},
+      {"label":"GTFS generator repository","url":"https://gitlab.spline.de/spline/transitous/georgian-railways-gtfs","method":"GET","format":"Source repository","authentication":"None"},
+      {"label":"Transitous Georgia source configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","method":"GET","format":"JSON source configuration","authentication":"None"}
+    ],
+    "schemas": [
+      {"name":"agency.txt and feed_info.txt","description":"Agency identity and generated-feed coverage metadata.","fields":[
+        {"field":"agency_id","type":"string","nullable":"No","example":"georgian-railway","meaning":"Agency identifier","freshness":"reference"},
+        {"field":"agency_name","type":"string","nullable":"No","example":"Georgian Railway","meaning":"Agency name","freshness":"reference"},
+        {"field":"agency_url","type":"URL","nullable":"No","example":"https://gr.com.ge","meaning":"Official agency site","freshness":"reference"},
+        {"field":"agency_timezone","type":"IANA timezone","nullable":"No","example":"Asia/Tbilisi","meaning":"Schedule timezone","freshness":"reference"},
+        {"field":"feed_publisher_name","type":"string","nullable":"No","example":"Jonah Brüchert","meaning":"Derived-feed publisher","freshness":"reference","notes":"Not Georgian Railway itself"},
+        {"field":"feed_publisher_url","type":"URL","nullable":"No","example":"https://gitlab.spline.de/spline/transitous/georgian-railways-gtfs","meaning":"Generator and source repository","freshness":"reference"},
+        {"field":"feed_lang","type":"language code","nullable":"No","example":"en","meaning":"Default feed language","freshness":"reference"},
+        {"field":"feed_start_date","type":"YYYYMMDD","nullable":"No","example":"20260721","meaning":"First covered service date","freshness":"reference"},
+        {"field":"feed_end_date","type":"YYYYMMDD","nullable":"No","example":"20261117","meaning":"Last covered service date","freshness":"reference"}
+      ]},
+      {"name":"stops.txt","description":"Passenger railway stations with coordinates.","fields":[
+        {"field":"stop_name","type":"string","nullable":"No","example":"Abasha","meaning":"Default station name","freshness":"reference","notes":"Translations are available"},
+        {"field":"stop_id","type":"string","nullable":"No","example":"10784968460","meaning":"Stop identifier","freshness":"reference","notes":"Many IDs appear to be OpenStreetMap object IDs"},
+        {"field":"stop_lat","type":"decimal degrees","nullable":"No","example":"42.204258","meaning":"WGS84 latitude","freshness":"reference"},
+        {"field":"stop_lon","type":"decimal degrees","nullable":"No","example":"42.202137","meaning":"WGS84 longitude","freshness":"reference"}
+      ]},
+      {"name":"shapes.txt","description":"Detailed polyline points for generated national and international rail routes.","fields":[
+        {"field":"shape_id","type":"string","nullable":"No","example":"shp_102_13","meaning":"Trip geometry identifier","freshness":"reference"},
+        {"field":"shape_pt_lat","type":"decimal degrees","nullable":"No","example":"41.65831","meaning":"WGS84 shape-point latitude","freshness":"reference"},
+        {"field":"shape_pt_lon","type":"decimal degrees","nullable":"No","example":"41.677883","meaning":"WGS84 shape-point longitude","freshness":"reference"},
+        {"field":"shape_pt_sequence","type":"integer","nullable":"No","example":"1","meaning":"Point order within the shape","freshness":"reference"},
+        {"field":"shape_dist_traveled","type":"number","nullable":"No","example":"123.049","meaning":"Cumulative distance along shape","freshness":"derived","notes":"Observed values behave as metres"}
+      ]},
+      {"name":"routes.txt","description":"Train-number routes with standard and extended rail-mode types.","fields":[
+        {"field":"route_long_name","type":"string","nullable":"Yes","example":"","meaning":"Optional route description","freshness":"reference","notes":"Blank in all 38 records"},
+        {"field":"route_short_name","type":"string","nullable":"No","example":"802","meaning":"Passenger-facing train number","freshness":"reference"},
+        {"field":"agency_id","type":"string","nullable":"No","example":"georgian-railway","meaning":"Agency foreign key","freshness":"reference"},
+        {"field":"route_type","type":"integer","nullable":"No","example":"102","meaning":"GTFS or extended rail type","freshness":"reference","notes":"Observed: 2 standard rail, 102 long-distance rail, 106 regional rail"},
+        {"field":"route_id","type":"string","nullable":"No","example":"802","meaning":"Route identifier","freshness":"reference","notes":"Matches the train number in the sample"}
+      ]},
+      {"name":"calendar_dates.txt","description":"Explicit dates on which each generated service runs.","fields":[
+        {"field":"service_id","type":"string","nullable":"No","example":"geo-1198501","meaning":"Dated service key","freshness":"reference"},
+        {"field":"exception_type","type":"integer enum","nullable":"No","example":"1","meaning":"Service is added on this date","freshness":"reference","notes":"Only value 1 was observed"},
+        {"field":"date","type":"YYYYMMDD","nullable":"No","example":"20260723","meaning":"Operating date","freshness":"reference"}
+      ]},
+      {"name":"trips.txt","description":"Generated dated rides mapped to train-number routes and shapes.","fields":[
+        {"field":"route_id","type":"string","nullable":"No","example":"201","meaning":"Train-number route key","freshness":"reference"},
+        {"field":"service_id","type":"string","nullable":"No","example":"geo-19197563","meaning":"Dated service key","freshness":"reference"},
+        {"field":"shape_id","type":"string","nullable":"No","example":"shp_2_36","meaning":"Geometry foreign key","freshness":"reference"},
+        {"field":"trip_id","type":"string","nullable":"No","example":"geo-19197563","meaning":"Trip identifier","freshness":"reference"}
+      ]},
+      {"name":"stop_times.txt","description":"Scheduled passenger calling times ordered along each generated trip.","fields":[
+        {"field":"trip_id","type":"string","nullable":"No","example":"geo-19197563","meaning":"Trip foreign key","freshness":"reference"},
+        {"field":"arrival_time","type":"GTFS time","nullable":"No","example":"14:55:00","meaning":"Scheduled passenger arrival","freshness":"reference"},
+        {"field":"departure_time","type":"GTFS time","nullable":"No","example":"14:55:00","meaning":"Scheduled passenger departure","freshness":"reference"},
+        {"field":"stop_id","type":"string","nullable":"No","example":"6199471015","meaning":"Passenger stop foreign key","freshness":"reference"},
+        {"field":"stop_sequence","type":"integer","nullable":"No","example":"0","meaning":"Calling order","freshness":"reference","notes":"Starts at zero"},
+        {"field":"shape_dist_traveled","type":"number","nullable":"No","example":"2643.542","meaning":"Distance along trip shape","freshness":"derived","notes":"Observed values behave as metres"}
+      ]},
+      {"name":"attributions.txt","description":"Required source attribution; the ZIP contains this filename twice but one logical row.","fields":[
+        {"field":"organization_name","type":"string","nullable":"No","example":"OpenStreetMap contributors","meaning":"Contributing organization or community","freshness":"reference"},
+        {"field":"is_producer","type":"0/1 integer","nullable":"No","example":"1","meaning":"Producer attribution flag","freshness":"reference"},
+        {"field":"is_operator","type":"0/1 integer","nullable":"No","example":"0","meaning":"Operator attribution flag","freshness":"reference"},
+        {"field":"is_authority","type":"0/1 integer","nullable":"No","example":"0","meaning":"Authority attribution flag","freshness":"reference"},
+        {"field":"attribution_url","type":"URL","nullable":"No","example":"https://www.openstreetmap.org/copyright","meaning":"Required attribution link","freshness":"reference"}
+      ]},
+      {"name":"translations.txt","description":"Localized stop names; 85 stops in each of English, Georgian and Russian.","fields":[
+        {"field":"table_name","type":"string","nullable":"No","example":"stops","meaning":"Translated table","freshness":"reference","notes":"Only stops observed"},
+        {"field":"field_name","type":"string","nullable":"No","example":"stop_name","meaning":"Translated field","freshness":"reference"},
+        {"field":"language","type":"language code","nullable":"No","example":"en","meaning":"Translation language","freshness":"reference","notes":"Observed en, ka and ru"},
+        {"field":"translation","type":"string","nullable":"No","example":"Kutaisi I","meaning":"Localized station name","freshness":"reference"},
+        {"field":"record_id","type":"string","nullable":"No","example":"10056291745","meaning":"Stop-record key","freshness":"reference"}
+      ]}
+    ],
+    "samples": [
+      {"label":"Feed coverage metadata","retrievedAt":"2026-07-22 13:45 Asia/Tbilisi","format":"CSV","value":"feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date\nJonah Brüchert,https://gitlab.spline.de/spline/transitous/georgian-railways-gtfs,en,20260721,20261117"},
+      {"label":"Scheduled calling time","retrievedAt":"2026-07-22 13:45 Asia/Tbilisi","format":"CSV","value":"trip_id,arrival_time,departure_time,stop_id,stop_sequence,shape_dist_traveled\ngeo-19197563,14:55:00,14:55:00,6199471015,0,0"}
+    ],
+    "caveats": ["Community-derived rather than first-party publication", "Not realtime; no delay, actual arrival, cancellation, platform, seat or live-position fields", "route_long_name is blank for every route", "Duplicate attributions.txt ZIP member can confuse simplistic ZIP readers", "Critical schedules should be compared with the official Railway API/page"],
+    "reliability": ["Every table was inspected and row-counted from the live processed ZIP", "Four-month feed horizon is declared in feed_info", "Shapes and calling times provide map-ready trip structure", "Explicit ODbL and OpenStreetMap attribution are present"],
+    "privacy": ["Contains public railway infrastructure and schedules, not bookings or traveler identity"],
+    "citations": [
+      {"label":"Processed Georgian Railway GTFS","url":"https://api.transitous.org/gtfs/ge_georgian-railway.gtfs.zip","type":"Mirror"},
+      {"label":"Generator repository","url":"https://gitlab.spline.de/spline/transitous/georgian-railways-gtfs","type":"Wrapper"},
+      {"label":"Transitous Georgia source configuration","url":"https://github.com/public-transport/transitous/blob/master/feeds/ge.json","type":"Documentation"},
+      {"label":"Open Database License 1.0","url":"https://opendatacommons.org/licenses/odbl/1-0/","type":"Documentation"}
+    ]
+  }
+]

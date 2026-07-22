@@ -1,0 +1,300 @@
+[
+  {
+    "slug": "tbilservice-live-waste-telemetry-unavailable",
+    "name": "Tbilservice waste collection, bin, and fleet telemetry",
+    "shortName": "Waste telemetry",
+    "category": "Utilities",
+    "subcategory": "Waste operations",
+    "executiveSummary": "Tbilservice's official site publishes service descriptions and news, but no public feed was found for collection routes, vehicle positions, bin fullness, missed collections, or operational status. External case-study reporting says some sensor data exists internally, not publicly.",
+    "provider": "Tbilservice Group",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi",
+    "freshness": "Unknown",
+    "updateCadence": "Public news only; operational telemetry cadence unavailable",
+    "evidence": "Unavailable",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Official public site only; no operational data endpoint found.",
+    "license": "Not applicable to unavailable telemetry; public-site reuse unclear",
+    "keyEntities": [],
+    "accessPoints": [
+      {
+        "label": "Official site",
+        "url": "https://www.tbsg.ge/en",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "None for public site"
+      }
+    ],
+    "schemas": [],
+    "samples": [],
+    "caveats": [
+      "No public operational feed",
+      "Reported internal ultrasonic/GSM container monitoring is not public access evidence",
+      "Public news is not telemetry"
+    ],
+    "reliability": [
+      "Official public site inspected"
+    ],
+    "citations": [
+      {
+        "label": "Tbilservice official site",
+        "url": "https://www.tbsg.ge/en",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "tbilisi-energy-gas-outages-unavailable",
+    "name": "Tbilisi Energy gas interruption data",
+    "shortName": "Gas interruptions",
+    "category": "Utilities",
+    "subcategory": "Natural gas outages",
+    "executiveSummary": "No public official machine-readable gas-interruption list, map, or API was found. The official site returned CloudFront 403 to command-line validation, and the customer portal is authenticated/private.",
+    "provider": "Tbilisi Energy",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi service area",
+    "freshness": "Unknown",
+    "updateCadence": "Unavailable",
+    "evidence": "Unavailable",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Official site access was blocked to command-line validation; no public outage endpoint found. my.te.ge is private/account-specific.",
+    "license": "Not applicable; no dataset found",
+    "keyEntities": [],
+    "accessPoints": [
+      {
+        "label": "Official site",
+        "url": "https://te.ge",
+        "method": "GET",
+        "format": "HTML",
+        "authentication": "Public site, but CloudFront returned 403 to test"
+      },
+      {
+        "label": "Customer portal",
+        "url": "https://my.te.ge",
+        "format": "Private web application",
+        "authentication": "Customer login required",
+        "notes": "Out of scope for public civic data"
+      }
+    ],
+    "schemas": [],
+    "samples": [],
+    "caveats": [
+      "No public dataset found",
+      "Customer portal is private",
+      "Hotlines are contact channels, not datasets",
+      "Republished media notices have incomplete provenance/coverage"
+    ],
+    "reliability": [
+      "Official avenues and access boundary checked"
+    ],
+    "citations": [
+      {
+        "label": "Tbilisi Energy official site",
+        "url": "https://te.ge",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "tbilisi-isp-outages-unavailable",
+    "name": "Tbilisi ISP outage/status feeds",
+    "shortName": "ISP outages",
+    "category": "Utilities",
+    "subcategory": "Internet outages",
+    "executiveSummary": "No official public citywide outage/status feed was found for Magti or Silknet. Account self-service pages are private, and the communications regulator's user speed-test service is not an outage feed.",
+    "provider": "Magti, Silknet, and communications-sector public services",
+    "sourceKind": "Official catalog or map",
+    "geography": "Tbilisi / Georgia",
+    "freshness": "Unknown",
+    "updateCadence": "Unavailable",
+    "evidence": "Unavailable",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "No public official status API/map found; account portals are private.",
+    "license": "Not applicable; no dataset found",
+    "keyEntities": [],
+    "accessPoints": [],
+    "schemas": [],
+    "samples": [],
+    "caveats": [
+      "No public official feed found",
+      "Private customer portals are out of scope",
+      "sheamotsme.ge is a user speed test, not outage status"
+    ],
+    "reliability": [
+      "Major official provider/status avenues checked"
+    ],
+    "citations": []
+  },
+  {
+    "slug": "georgia-112-live-incidents-unavailable",
+    "name": "Georgia 112 live incident and dispatch data",
+    "shortName": "112 incidents",
+    "category": "Safety",
+    "subcategory": "Emergency incidents",
+    "executiveSummary": "No public live incident map or record feed was found. Official pages publish educational material, news, and historical/event-specific aggregate statistics, while caller and dispatch records are sensitive operational data.",
+    "provider": "Public Safety Command Center 112",
+    "sourceKind": "Official catalog or map",
+    "geography": "Georgia",
+    "freshness": "Unknown",
+    "updateCadence": "No public incident-level feed",
+    "evidence": "Unavailable",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Public information website only; no incident-level public API/map. Private service endpoints were not probed.",
+    "license": "Not applicable to unavailable incident records",
+    "keyEntities": [],
+    "accessPoints": [
+      {
+        "label": "Official 112 site",
+        "url": "https://112.gov.ge",
+        "method": "GET",
+        "format": "HTML/PDF",
+        "authentication": "None for public content"
+      }
+    ],
+    "schemas": [],
+    "samples": [],
+    "caveats": [
+      "No public incident-level data",
+      "Caller/dispatch information is sensitive",
+      "Aggregate annual reports are historical and a different dataset class"
+    ],
+    "reliability": [
+      "Official public publication surface checked",
+      "Privacy/safety boundary recorded explicitly"
+    ],
+    "privacy": [
+      "Do not seek or expose caller identities, phone numbers, precise private addresses, or active dispatch details"
+    ],
+    "citations": [
+      {
+        "label": "Official 112 site",
+        "url": "https://112.gov.ge",
+        "type": "Primary"
+      }
+    ]
+  },
+  {
+    "slug": "gatishvebi-crowdsourced-outages-unavailable",
+    "name": "Gatishvebi.ge crowdsourced utility outage reports",
+    "shortName": "Crowdsourced outages",
+    "category": "Utilities",
+    "subcategory": "Crowdsourced outage reports",
+    "executiveSummary": "A third-party UI for user-submitted electricity, water, gas, and internet outage reports. Its client code exposed an apparent Supabase reports shape, but the referenced backend host failed DNS resolution and no current record was retrieved.",
+    "provider": "Gatishvebi.ge (third party)",
+    "sourceKind": "Third-party aggregation",
+    "geography": "Tbilisi / user-reported locations",
+    "freshness": "Live",
+    "updateCadence": "User-submitted/event-driven when backend works",
+    "evidence": "Unavailable",
+    "testedAt": "2026-07-22 research session",
+    "accessSummary": "Public UI and client code inspected; referenced backend failed DNS resolution. No credentials or private routes used.",
+    "license": "Unclear; user-submitted content and backend reuse terms not established",
+    "recordCount": "UI showed 0 at validation; backend was unavailable, so this is not a verified count",
+    "keyEntities": [
+      "Crowdsourced outage report (unverified schema)"
+    ],
+    "accessPoints": [
+      {
+        "label": "Third-party UI",
+        "url": "https://gatishvebi.ge",
+        "method": "GET",
+        "format": "HTML/web application",
+        "authentication": "None for public UI"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Apparent reports table",
+        "description": "Fields referenced by public client insert/select code; no returned row was observed.",
+        "fields": [
+          {
+            "field": "id",
+            "type": "unknown",
+            "nullable": "Unknown",
+            "example": "unavailable",
+            "meaning": "Report ID",
+            "freshness": "reference",
+            "notes": "Likely but not observed"
+          },
+          {
+            "field": "utility",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "water",
+            "meaning": "Reported utility category",
+            "freshness": "live"
+          },
+          {
+            "field": "district",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "User-selected district",
+            "freshness": "live"
+          },
+          {
+            "field": "street",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "User-entered street",
+            "freshness": "live"
+          },
+          {
+            "field": "lat",
+            "type": "number",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Report latitude",
+            "freshness": "live"
+          },
+          {
+            "field": "lng",
+            "type": "number",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Report longitude",
+            "freshness": "live"
+          },
+          {
+            "field": "description",
+            "type": "string",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Free-text report",
+            "freshness": "live"
+          },
+          {
+            "field": "created_at",
+            "type": "datetime",
+            "nullable": "Unknown",
+            "example": "varies",
+            "meaning": "Submission time",
+            "freshness": "live"
+          }
+        ]
+      }
+    ],
+    "samples": [],
+    "caveats": [
+      "Third-party and crowdsourced, not official status",
+      "Backend unavailable during validation",
+      "Fields inferred from client code rather than returned records",
+      "Free text may be unverified or personal"
+    ],
+    "reliability": [
+      "Public UI and client data-access code were inspected",
+      "Failure mode was recorded rather than fabricating a sample"
+    ],
+    "privacy": [
+      "Treat exact user-entered locations and free text cautiously; do not infer household identity"
+    ],
+    "citations": [
+      {
+        "label": "Gatishvebi.ge",
+        "url": "https://gatishvebi.ge",
+        "type": "Context"
+      }
+    ]
+  }
+]
