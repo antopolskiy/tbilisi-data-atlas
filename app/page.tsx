@@ -33,8 +33,8 @@ export default function Home() {
           </h1>
           <p className="hero-intro">
             A source-by-source inventory of what exists, how current it is, how it can be
-            accessed, and what every returned field means. Availability comes first; no product
-            concepts are included.
+            accessed, and what every returned field means. The evidence catalog stays distinct
+            from—but is now directly connected to—the <Link href="/ideas">cross-source idea studio</Link>.
           </p>
         </div>
         <div className="hero-note" aria-label="Research standard">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
+import { ideasForSource } from "../../data/ideas";
 import { sourceBySlug, sources } from "../../data/sources";
 import type { FieldFreshness } from "../../data/types";
 
@@ -40,6 +41,7 @@ export default async function SourcePage({ params }: { params: Promise<{ slug: s
   if (!source) notFound();
 
   const fieldCount = source.schemas.reduce((total, schema) => total + schema.fields.length, 0);
+  const connectedIdeas = ideasForSource(source.slug);
 
   return (
     <main>
@@ -294,9 +296,36 @@ export default async function SourcePage({ params }: { params: Promise<{ slug: s
               </div>
             </section>
 
+            {connectedIdeas.length ? (
+              <section className="content-section source-ideas" id="ideas">
+                <div className="content-heading">
+                  <span>05</span>
+                  <div>
+                    <p className="eyebrow">Cross-source possibilities</p>
+                    <h2>Ideas using this source</h2>
+                  </div>
+                </div>
+                <div className="source-idea-grid">
+                  {connectedIdeas.map((idea) => {
+                    const otherSourceCount = idea.sourceSlugs.length - 1;
+                    return (
+                      <Link href={`/ideas/${idea.slug}`} key={idea.slug}>
+                        <span>{idea.lens}</span>
+                        <h3>{idea.title}</h3>
+                        <p>{idea.question}</p>
+                        <small>
+                          Joined with {otherSourceCount} other {otherSourceCount === 1 ? "source" : "sources"} →
+                        </small>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
+
             <section className="content-section source-links" id="sources">
               <div className="content-heading">
-                <span>05</span>
+                <span>{connectedIdeas.length ? "06" : "05"}</span>
                 <div>
                   <p className="eyebrow">Source trail</p>
                   <h2>Primary pages and documentation</h2>

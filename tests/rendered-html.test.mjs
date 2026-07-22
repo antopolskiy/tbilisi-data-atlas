@@ -3,12 +3,13 @@ import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render(path = "/") {
+  const route = path === "/" || path.endsWith("/") ? path : `${path}/`;
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${path}`);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${route}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }),
+    new Request(`http://localhost${route}`, { headers: { accept: "text/html" } }),
     {
       ASSETS: {
         fetch: async () => new Response("Not found", { status: 404 }),
@@ -28,7 +29,7 @@ test("server-renders the catalog homepage and report metadata", async () => {
   assert.match(html, /What data does/);
   assert.match(html, /50<\/strong><span>sources cataloged/);
   assert.match(html, /1219<\/strong><span>fields documented/);
-  assert.match(html, /\/og\.png/);
+  assert.match(html, /\/og-ideas\.png/);
 });
 
 test("renders comparison, unavailable, and detailed source routes", async () => {
@@ -49,6 +50,28 @@ test("renders comparison, unavailable, and detailed source routes", async () => 
   assert.match(transitHtml, /Vehicle position/);
   assert.match(transitHtml, /realtimeArrivalMinutes/);
   assert.match(transitHtml, /Sample records/);
+  assert.match(transitHtml, /Ideas using this source/);
+  assert.match(transitHtml, /Home Before the Lights/);
+});
+
+test("renders the cross-source idea studio with bidirectional evidence links", async () => {
+  const [studio, idea] = await Promise.all([
+    render("/ideas"),
+    render("/ideas/home-before-the-lights"),
+  ]);
+
+  assert.equal(studio.status, 200);
+  const studioHtml = await studio.text();
+  assert.match(studioHtml, /What becomes possible/);
+  assert.match(studioHtml, /24<\/strong><span>cross-source ideas/);
+  assert.match(studioHtml, /href="\/sources\/telasi-power-outages"/);
+  assert.match(studioHtml, /href="\/ideas\/home-before-the-lights"/);
+
+  assert.equal(idea.status, 200);
+  const ideaHtml = await idea.text();
+  assert.match(ideaHtml, /Will electricity probably return before I arrive home/);
+  assert.match(ideaHtml, /Open every connected source/);
+  assert.match(ideaHtml, /href="\/sources\/ttc-passenger-information"/);
 });
 
 test("all generated source records have unique slugs and field-level schemas", async () => {

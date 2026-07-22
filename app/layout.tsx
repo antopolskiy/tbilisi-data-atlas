@@ -22,24 +22,24 @@ export const metadata: Metadata = {
     template: "%s · Tbilisi Data Atlas",
   },
   description:
-    "An evidence-first, field-level catalog of public and publicly observable data sources for Tbilisi and Georgia.",
+    "An evidence-first catalog of Tbilisi and Georgia data sources, plus bounded ideas that connect them.",
   openGraph: {
     type: "website",
     title: "Tbilisi Data Atlas",
     description:
-      "An evidence-first, field-level catalog of public and publicly observable data sources for Tbilisi and Georgia.",
+      "Explore field-level public data sources and the unexpected, people-centered ideas created by connecting them.",
     images: [
       {
-        url: `${siteUrl}/og.png`,
-        width: 1200,
-        height: 630,
-        alt: "An editorial map-like illustration of Tbilisi as a network of civic data sources",
+        url: `${siteUrl}/og-ideas.png`,
+        width: 1731,
+        height: 909,
+        alt: "Tbilisi Data Atlas: 50 public data sources connected to 24 people-centered ideas",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    images: [`${siteUrl}/og.png`],
+    images: [`${siteUrl}/og-ideas.png`],
   },
 };
 

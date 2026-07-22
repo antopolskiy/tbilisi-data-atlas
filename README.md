@@ -2,7 +2,7 @@
 
 An evidence-first, multi-page HTML catalog of public and publicly observable data sources for Tbilisi and Georgia. The report contains 50 source profiles, 1,219 field definitions, representative records, access and licensing notes, and a separate inventory of investigated but unavailable or restricted avenues.
 
-No product concepts are included in this report.
+The cross-source idea studio adds 24 bounded, people-centered concept hypotheses. Every idea links to the exact source profiles it uses, and every source links back to the concepts it can support.
 
 ## Public report
 
@@ -20,6 +20,8 @@ Open <http://localhost:3000/>.
 ## Report routes
 
 - `/` — searchable source catalog
+- `/ideas` — cross-source idea studio
+- `/ideas/{slug}` — one concept, its demo reveal, MVP boundary, and connected evidence
 - `/matrix` — compact source comparison matrix
 - `/availability` — investigated unavailable, unresolved, private, or restricted avenues
 - `/methodology` — evidence and field-freshness definitions
