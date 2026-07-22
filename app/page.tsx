@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CatalogClient } from "./catalog-client";
 import { SiteHeader } from "./components/site-header";
 import { sources } from "./data/sources";
@@ -67,7 +68,7 @@ export default function Home() {
 
       <footer className="site-footer shell">
         <p>Tbilisi Data Atlas · research snapshot, not a guarantee of future availability.</p>
-        <a href="/methodology">Methodology and evidence labels</a>
+        <Link href="/methodology">Methodology and evidence labels</Link>
       </footer>
     </main>
   );

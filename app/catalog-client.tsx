@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import type { DataSource, EvidenceLevel, Freshness } from "./data/types";
 
 const freshnessOptions: Freshness[] = [
@@ -54,9 +55,9 @@ function SourceCard({ source }: { source: DataSource }) {
           {source.schemas.length} {source.schemas.length === 1 ? "entity" : "entities"} · {fieldCount}{" "}
           fields
         </span>
-        <a href={`/sources/${source.slug}`} aria-label={`Open ${source.name} data profile`}>
+        <Link href={`/sources/${source.slug}`} aria-label={`Open ${source.name} data profile`}>
           Open data profile <span aria-hidden="true">→</span>
-        </a>
+        </Link>
       </div>
     </article>
   );
